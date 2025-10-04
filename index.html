@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réservation Installations Sportives - Ville de Québec</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #fafaf9;
+            min-height: 100vh;
+            cursor: none;
+            overflow-x: hidden;
+        }
+
+        /* Curseur personnalisé - Balle de tennis */
+        .custom-cursor {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #c4ff61, #90ee02);
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            transition: transform 0.15s ease;
+            box-shadow: 0 4px 12px rgba(144, 238, 2, 0.4);
+        }
+
+        .custom-cursor::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            width: 80%;
+            height: 2px;
+            background: white;
+            border-radius: 2px;
+            transform: translateY(-50%) rotate(-30deg);
+        }
+
+        .custom-cursor::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 10%;
+            width: 80%;
+            height: 2px;
+            background: white;
+            border-radius: 2px;
+            transform: translateY(-50%) rotate(30deg);
+        }
+
+        .custom-cursor.clicked {
+            transform: scale(0.8);
+        }
+
+        a, button, .facility-card, .nav-link {
+            cursor: none;
+        }
+
+        /* Hero Section */
+        header {
+            background: linear-gradient(165deg, #0f4c2c 0%, #1a7a4a 40%, #4ade80 100%);
+            color: white;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 15s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) translateX(0px); }
+            50% { transform: translateY(-30px) translateX(20px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-family: 'Sora', sans-serif;
+            font-size: 4.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-text .highlight {
+            color: #c4ff61;
+            display: block;
+        }
+
+        .hero-text p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+            max-width: 500px;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            background: white;
+            color: #0f4c2c;
+            padding: 1.2rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .hero-visual {
+            position: relative;
+            height: 500px;
+        }
+
+        .sport-icon {
+            position: absolute;
+            font-size: 4rem;
+            animation: bounce 3s ease-in-out infinite;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
+        }
+
+        .sport-icon:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .sport-icon:nth-child(2) { top: 50%; right: 20%; animation-delay: 0.5s; }
+        .sport-icon:nth-child(3) { bottom: 15%; left: 30%; animation-delay: 1s; }
+        .sport-icon:nth-child(4) { top: 30%; right: 5%; animation-delay: 1.5s; }
+        .sport-icon:nth-child(5) { bottom: 40%; right: 40%; animation-delay: 2s; }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav ul li {
+            margin: 0;
+        }
+
+        nav ul li a {
+            display: block;
+            padding: 1.2rem 2rem;
+            color: #1a1a1a;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 1rem;
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: #22c55e;
+            transform: translateX(-50%);
+            transition: width 0.3s ease;
+        }
+
+        nav ul li a:hover::after {
+            width: 60%;
+        }
+
+        nav ul li a.active {
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        nav ul li a.active::after {
+            width: 60%;
+        }
+
+        main {
+            padding: 2rem 0;
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        h2 {
+            font-family: 'Sora', sans-serif;
+            color: #0f172a;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .filters-container {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.95rem;
+        }
+
+        .map-grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        #map {
+            height: 600px;
+            width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 100px;
+        }
+
+        .facilities-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 1rem;
+        }
+
+        .facilities-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .facilities-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .facilities-list::-webkit-scrollbar-thumb {
+            background: #22c55e;
+            border-radius: 10px;
+        }
+
+        .facilities-list::-webkit-scrollbar-thumb:hover {
+            background: #16a34a;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #555;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #22c55e;
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23374151' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            padding-right: 3rem;
+        }
+
+        button {
+            background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+            color: white;
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.3);
+            font-family: 'Inter', sans-serif;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(34, 197, 94, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .schedule-card, .facility-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 1.5rem;
+            background: white;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .facilities-list .facility-card {
+            padding: 1.25rem;
+        }
+
+        .facility-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #22c55e, #4ade80);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .schedule-card:hover, .facility-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-color: #22c55e;
+        }
+
+        .facility-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .facility-card.selected {
+            border-color: #22c55e;
+            border-width: 2px;
+            box-shadow: 0 8px 30px rgba(34, 197, 94, 0.2);
+            background: linear-gradient(to bottom, #f0fdf4 0%, white 100%);
+        }
+
+        .facility-card.selected::before {
+            transform: scaleX(1);
+        }
+
+        .reserve-btn-container {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        .reserve-btn-container button {
+            width: 100%;
+            margin: 0;
+            padding: 0.9rem 1.5rem;
+            font-size: 1rem;
+        }
+
+        .schedule-card h3, .facility-card h3 {
+            font-family: 'Sora', sans-serif;
+            color: #0f172a;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .facility-card {
+            position: relative;
+        }
+
+        .availability-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .availability-badge.available {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .availability-badge.limited {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .availability-badge.full {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .schedule-item {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .schedule-item:last-child {
+            border-bottom: none;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+        }
+
+        .alert.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .reservations-list {
+            margin-top: 2rem;
+        }
+
+        .reservation-card {
+            background: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+
+        footer {
+            background: #0f172a;
+            color: white;
+            text-align: center;
+            padding: 3rem 0;
+            margin-top: 5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        footer p {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .hero-text h1 {
+                font-size: 3rem;
+            }
+
+            .hero-visual {
+                height: 300px;
+            }
+
+            nav ul {
+                flex-direction: column;
+            }
+
+            nav ul li a {
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            .map-grid-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            #map {
+                height: 400px;
+                position: relative;
+                top: 0;
+            }
+
+            .facilities-list {
+                max-height: none;
+            }
+
+            .schedule-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="custom-cursor"></div>
+
+    <header>
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>
+                    Réservez vos
+                    <span class="highlight">installations sportives</span>
+                    en un clic
+                </h1>
+                <p>Découvrez et réservez facilement les meilleurs terrains de sport dans la région de Québec. Tennis, piscines, soccer et plus encore.</p>
+            </div>
+            <div class="hero-visual">
+                <div class="sport-icon">🎾</div>
+                <div class="sport-icon">🏊</div>
+                <div class="sport-icon">⚽</div>
+                <div class="sport-icon">🏀</div>
+                <div class="sport-icon">🏐</div>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#" class="nav-link active" data-section="explorer">🗺️ Explorer</a></li>
+            <li><a href="#" class="nav-link" data-section="mes-reservations">📋 Mes Réservations</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <!-- Section Explorer avec Carte -->
+        <section id="explorer" class="section active">
+            <h2>Trouvez votre terrain idéal</h2>
+
+            <div class="filters-container">
+                <div class="filter-group">
+                    <label for="filter-ville">Filtrer par ville</label>
+                    <select id="filter-ville">
+                        <option value="">Toutes les villes</option>
+                        <option value="quebec">Québec</option>
+                        <option value="levis">Lévis</option>
+                        <option value="beauport">Beauport</option>
+                        <option value="sainte-foy">Sainte-Foy</option>
+                        <option value="charlesbourg">Charlesbourg</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filter-sport">Filtrer par sport</label>
+                    <select id="filter-sport">
+                        <option value="">Tous les sports</option>
+                        <option value="tennis">Tennis</option>
+                        <option value="piscine">Piscine</option>
+                        <option value="soccer">Soccer</option>
+                        <option value="basketball">Basketball</option>
+                        <option value="volleyball">Volleyball</option>
+                        <option value="baseball">Baseball</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="map-grid-container">
+                <div id="map"></div>
+                <div class="facilities-list" id="facilities-grid"></div>
+            </div>
+        </section>
+
+        <!-- Section Formulaire de Réservation -->
+        <section id="reservation-form" class="section">
+            <button onclick="closeReservationForm()" style="margin-bottom: 1rem; background: #6b7280;">← Retour</button>
+            <h2 id="form-title">Réserver</h2>
+            <div id="reservation-alert" class="alert"></div>
+            <form id="dynamic-reservation-form">
+                <input type="hidden" id="facility-id">
+                <div class="form-group">
+                    <label for="facility-name-display">Installation *</label>
+                    <input type="text" id="facility-name-display" readonly style="background: #f3f4f6;">
+                </div>
+                <div class="form-group">
+                    <label for="res-nom">Nom complet *</label>
+                    <input type="text" id="res-nom" required>
+                </div>
+                <div class="form-group">
+                    <label for="res-email">Courriel *</label>
+                    <input type="email" id="res-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="res-telephone">Téléphone *</label>
+                    <input type="tel" id="res-telephone" required>
+                </div>
+                <div class="form-group">
+                    <label for="res-date">Date *</label>
+                    <input type="date" id="res-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="res-heure">Heure *</label>
+                    <select id="res-heure" required>
+                        <option value="">Sélectionner une heure</option>
+                        <option value="08:00">08:00</option>
+                        <option value="09:00">09:00</option>
+                        <option value="10:00">10:00</option>
+                        <option value="11:00">11:00</option>
+                        <option value="12:00">12:00</option>
+                        <option value="13:00">13:00</option>
+                        <option value="14:00">14:00</option>
+                        <option value="15:00">15:00</option>
+                        <option value="16:00">16:00</option>
+                        <option value="17:00">17:00</option>
+                        <option value="18:00">18:00</option>
+                        <option value="19:00">19:00</option>
+                        <option value="20:00">20:00</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="res-duree">Durée *</label>
+                    <select id="res-duree" required>
+                        <option value="1">1 heure</option>
+                        <option value="2">2 heures</option>
+                        <option value="3">3 heures</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="res-notes">Notes additionnelles</label>
+                    <textarea id="res-notes" rows="3"></textarea>
+                </div>
+                <button type="submit">Confirmer la réservation</button>
+            </form>
+        </section>
+
+        <!-- Section Tennis (kept but hidden) -->
+        <section id="tennis" class="section" style="display:none;">
+            <h2>Réservation de Terrains de Tennis</h2>
+            <div id="tennis-alert" class="alert"></div>
+            <form id="tennis-form">
+                <div class="form-group">
+                    <label for="tennis-nom">Nom complet *</label>
+                    <input type="text" id="tennis-nom" required>
+                </div>
+                <div class="form-group">
+                    <label for="tennis-email">Courriel *</label>
+                    <input type="email" id="tennis-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="tennis-telephone">Téléphone *</label>
+                    <input type="tel" id="tennis-telephone" required>
+                </div>
+                <div class="form-group">
+                    <label for="tennis-terrain">Terrain *</label>
+                    <select id="tennis-terrain" required>
+                        <option value="">Sélectionner un terrain</option>
+                        <option value="Parc Victoria - Court 1">Parc Victoria - Court 1</option>
+                        <option value="Parc Victoria - Court 2">Parc Victoria - Court 2</option>
+                        <option value="Parc des Braves - Court 1">Parc des Braves - Court 1</option>
+                        <option value="Parc des Braves - Court 2">Parc des Braves - Court 2</option>
+                        <option value="Complexe St-Louis - Court 1">Complexe St-Louis - Court 1</option>
+                        <option value="Complexe St-Louis - Court 2">Complexe St-Louis - Court 2</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="tennis-date">Date *</label>
+                    <input type="date" id="tennis-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="tennis-heure">Heure *</label>
+                    <select id="tennis-heure" required>
+                        <option value="">Sélectionner une heure</option>
+                        <option value="08:00">08:00</option>
+                        <option value="09:00">09:00</option>
+                        <option value="10:00">10:00</option>
+                        <option value="11:00">11:00</option>
+                        <option value="12:00">12:00</option>
+                        <option value="13:00">13:00</option>
+                        <option value="14:00">14:00</option>
+                        <option value="15:00">15:00</option>
+                        <option value="16:00">16:00</option>
+                        <option value="17:00">17:00</option>
+                        <option value="18:00">18:00</option>
+                        <option value="19:00">19:00</option>
+                        <option value="20:00">20:00</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="tennis-duree">Durée *</label>
+                    <select id="tennis-duree" required>
+                        <option value="1">1 heure</option>
+                        <option value="2">2 heures</option>
+                    </select>
+                </div>
+                <button type="submit">Réserver</button>
+            </form>
+        </section>
+
+        <!-- Section Piscines -->
+        <section id="piscine" class="section">
+            <h2>Horaires des Piscines</h2>
+            <div class="schedule-grid">
+                <div class="schedule-card">
+                    <h3>Piscine Montcalm</h3>
+                    <p><strong>📍 Adresse:</strong> 901 avenue Wolfe</p>
+                    <div class="schedule-item">
+                        <strong>Lundi - Vendredi:</strong><br>
+                        Bain libre: 06:00 - 08:00<br>
+                        Cours: 09:00 - 12:00<br>
+                        Bain libre: 12:00 - 14:00<br>
+                        Cours: 14:00 - 17:00<br>
+                        Bain libre: 17:00 - 21:00
+                    </div>
+                    <div class="schedule-item">
+                        <strong>Samedi - Dimanche:</strong><br>
+                        Bain libre: 08:00 - 12:00<br>
+                        Bain famille: 13:00 - 17:00
+                    </div>
+                </div>
+
+                <div class="schedule-card">
+                    <h3>Piscine de Sainte-Foy</h3>
+                    <p><strong>📍 Adresse:</strong> 2320 chemin Sainte-Foy</p>
+                    <div class="schedule-item">
+                        <strong>Lundi - Vendredi:</strong><br>
+                        Bain libre: 06:30 - 08:30<br>
+                        Cours: 09:00 - 12:00<br>
+                        Bain libre: 12:00 - 14:00<br>
+                        Cours: 14:00 - 17:00<br>
+                        Bain libre: 17:00 - 21:00
+                    </div>
+                    <div class="schedule-item">
+                        <strong>Samedi - Dimanche:</strong><br>
+                        Bain libre: 09:00 - 12:00<br>
+                        Bain famille: 13:00 - 18:00
+                    </div>
+                </div>
+
+                <div class="schedule-card">
+                    <h3>Centre Aquatique de Beauport</h3>
+                    <p><strong>📍 Adresse:</strong> 345 rue Clemenceau</p>
+                    <div class="schedule-item">
+                        <strong>Lundi - Vendredi:</strong><br>
+                        Bain libre: 06:00 - 08:00<br>
+                        Cours: 08:30 - 12:00<br>
+                        Bain libre: 12:00 - 15:00<br>
+                        Cours: 15:00 - 17:00<br>
+                        Bain libre: 17:00 - 21:30
+                    </div>
+                    <div class="schedule-item">
+                        <strong>Samedi - Dimanche:</strong><br>
+                        Bain libre: 08:00 - 13:00<br>
+                        Bain famille: 13:00 - 19:00
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Autres Terrains -->
+        <section id="autres" class="section">
+            <h2>Réservation d'Autres Terrains Sportifs</h2>
+            <div id="autres-alert" class="alert"></div>
+            <form id="autres-form">
+                <div class="form-group">
+                    <label for="autres-nom">Nom complet *</label>
+                    <input type="text" id="autres-nom" required>
+                </div>
+                <div class="form-group">
+                    <label for="autres-email">Courriel *</label>
+                    <input type="email" id="autres-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="autres-telephone">Téléphone *</label>
+                    <input type="tel" id="autres-telephone" required>
+                </div>
+                <div class="form-group">
+                    <label for="autres-type">Type de terrain *</label>
+                    <select id="autres-type" required>
+                        <option value="">Sélectionner un type</option>
+                        <option value="soccer">Terrain de Soccer</option>
+                        <option value="basketball">Terrain de Basketball</option>
+                        <option value="volleyball">Terrain de Volleyball</option>
+                        <option value="baseball">Terrain de Baseball</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="autres-terrain">Lieu *</label>
+                    <select id="autres-terrain" required>
+                        <option value="">Sélectionner un lieu</option>
+                        <option value="Parc de la Plage-Jacques-Cartier">Parc de la Plage-Jacques-Cartier</option>
+                        <option value="Parc du Bois-de-Coulonge">Parc du Bois-de-Coulonge</option>
+                        <option value="Complexe Sportif Sainte-Foy">Complexe Sportif Sainte-Foy</option>
+                        <option value="Parc des Champs-de-Bataille">Parc des Champs-de-Bataille</option>
+                        <option value="Centre Sportif Beauport">Centre Sportif Beauport</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="autres-date">Date *</label>
+                    <input type="date" id="autres-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="autres-heure">Heure *</label>
+                    <select id="autres-heure" required>
+                        <option value="">Sélectionner une heure</option>
+                        <option value="08:00">08:00</option>
+                        <option value="09:00">09:00</option>
+                        <option value="10:00">10:00</option>
+                        <option value="11:00">11:00</option>
+                        <option value="12:00">12:00</option>
+                        <option value="13:00">13:00</option>
+                        <option value="14:00">14:00</option>
+                        <option value="15:00">15:00</option>
+                        <option value="16:00">16:00</option>
+                        <option value="17:00">17:00</option>
+                        <option value="18:00">18:00</option>
+                        <option value="19:00">19:00</option>
+                        <option value="20:00">20:00</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="autres-duree">Durée *</label>
+                    <select id="autres-duree" required>
+                        <option value="1">1 heure</option>
+                        <option value="2">2 heures</option>
+                        <option value="3">3 heures</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="autres-notes">Notes additionnelles</label>
+                    <textarea id="autres-notes" rows="3"></textarea>
+                </div>
+                <button type="submit">Réserver</button>
+            </form>
+        </section>
+
+        <!-- Section Mes Réservations -->
+        <section id="mes-reservations" class="section">
+            <h2>Mes Réservations</h2>
+            <div class="reservations-list" id="reservations-list">
+                <p style="color: #666;">Aucune réservation pour le moment.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Ville de Québec - Installations Sportives</p>
+            <p>Pour toute question: 418-XXX-XXXX | info@ville.quebec.qc.ca</p>
+        </div>
+    </footer>
+
+    <script>
+        // Base de données des installations sportives
+        const facilities = [
+            { id: 1, name: 'Parc Victoria - Court 1', type: 'tennis', ville: 'quebec', lat: 46.8139, lng: -71.2080, address: '155 rue Crémazie Est', availability: 'available' },
+            { id: 2, name: 'Parc Victoria - Court 2', type: 'tennis', ville: 'quebec', lat: 46.8139, lng: -71.2078, address: '155 rue Crémazie Est', availability: 'limited' },
+            { id: 3, name: 'Parc des Braves - Court 1', type: 'tennis', ville: 'quebec', lat: 46.7889, lng: -71.2404, address: '2365 avenue des Braves', availability: 'available' },
+            { id: 4, name: 'Parc des Braves - Court 2', type: 'tennis', ville: 'quebec', lat: 46.7889, lng: -71.2402, address: '2365 avenue des Braves', availability: 'full' },
+            { id: 5, name: 'Complexe St-Louis - Court 1', type: 'tennis', ville: 'sainte-foy', lat: 46.7767, lng: -71.2893, address: '1200 rue de l\'Église', availability: 'available' },
+            { id: 6, name: 'Complexe St-Louis - Court 2', type: 'tennis', ville: 'sainte-foy', lat: 46.7767, lng: -71.2891, address: '1200 rue de l\'Église', availability: 'limited' },
+
+            { id: 7, name: 'Piscine Montcalm', type: 'piscine', ville: 'quebec', lat: 46.8025, lng: -71.2244, address: '901 avenue Wolfe', availability: 'available' },
+            { id: 8, name: 'Piscine de Sainte-Foy', type: 'piscine', ville: 'sainte-foy', lat: 46.7714, lng: -71.2920, address: '2320 chemin Sainte-Foy', availability: 'limited' },
+            { id: 9, name: 'Centre Aquatique de Beauport', type: 'piscine', ville: 'beauport', lat: 46.8601, lng: -71.1861, address: '345 rue Clemenceau', availability: 'available' },
+
+            { id: 10, name: 'Parc de la Plage-Jacques-Cartier - Soccer', type: 'soccer', ville: 'quebec', lat: 46.8324, lng: -71.2574, address: '235 rue Abraham-Martin', availability: 'available' },
+            { id: 11, name: 'Parc du Bois-de-Coulonge - Soccer', type: 'soccer', ville: 'quebec', lat: 46.7894, lng: -71.2516, address: '1215 chemin Saint-Louis', availability: 'limited' },
+            { id: 12, name: 'Complexe Sportif Sainte-Foy - Basketball', type: 'basketball', ville: 'sainte-foy', lat: 46.7725, lng: -71.2944, address: '930 avenue Myrand', availability: 'available' },
+            { id: 13, name: 'Parc des Champs-de-Bataille - Volleyball', type: 'volleyball', ville: 'quebec', lat: 46.7970, lng: -71.2177, address: '835 avenue Wilfrid-Laurier', availability: 'available' },
+            { id: 14, name: 'Centre Sportif Beauport - Baseball', type: 'baseball', ville: 'beauport', lat: 46.8677, lng: -71.1784, address: '500 rue Seigneuriale', availability: 'full' },
+            { id: 15, name: 'Parc Chauveau - Soccer', type: 'soccer', ville: 'charlesbourg', lat: 46.8834, lng: -71.2688, address: '7650 boulevard Cloutier', availability: 'available' },
+        ];
+
+        // Gestion de la navigation
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('.section');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const sectionId = link.getAttribute('data-section');
+
+                navLinks.forEach(l => l.classList.remove('active'));
+                sections.forEach(s => s.classList.remove('active'));
+
+                link.classList.add('active');
+                document.getElementById(sectionId).classList.add('active');
+
+                if (sectionId === 'explorer') {
+                    setTimeout(() => map.invalidateSize(), 100);
+                }
+            });
+        });
+
+        // Initialisation de la carte Leaflet
+        let map, markers = [];
+
+        function initMap() {
+            map = L.map('map').setView([46.8139, -71.2080], 12);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Afficher tous les marqueurs au démarrage
+            updateMap(facilities);
+        }
+
+        function updateMap(filteredFacilities = facilities) {
+            // Supprimer les anciens marqueurs
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+
+            // Créer des icônes personnalisées
+            const iconColors = {
+                tennis: '🎾',
+                piscine: '🏊',
+                soccer: '⚽',
+                basketball: '🏀',
+                volleyball: '🏐',
+                baseball: '⚾'
+            };
+
+            filteredFacilities.forEach(facility => {
+                const customIcon = L.divIcon({
+                    html: `<div style="font-size: 24px;">${iconColors[facility.type]}</div>`,
+                    className: 'custom-marker',
+                    iconSize: [30, 30]
+                });
+
+                const marker = L.marker([facility.lat, facility.lng], { icon: customIcon })
+                    .addTo(map)
+                    .bindPopup(`
+                        <strong>${facility.name}</strong><br>
+                        ${facility.address}<br>
+                        <span style="color: ${
+                            facility.availability === 'available' ? '#065f46' :
+                            facility.availability === 'limited' ? '#92400e' : '#991b1b'
+                        }">
+                            ${
+                                facility.availability === 'available' ? '✓ Disponible' :
+                                facility.availability === 'limited' ? '⚠ Peu de places' : '✗ Complet'
+                            }
+                        </span>
+                    `);
+
+                // Ajouter événement clic sur le marqueur
+                marker.on('click', () => {
+                    selectFacility(facility.id);
+                    // Scroller jusqu'à la carte
+                    const card = document.querySelector(`[data-facility-id="${facility.id}"]`);
+                    if (card) {
+                        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                });
+
+                markers.push(marker);
+            });
+
+            // Centrer la carte sur les marqueurs
+            if (filteredFacilities.length > 0) {
+                const bounds = L.latLngBounds(filteredFacilities.map(f => [f.lat, f.lng]));
+                map.fitBounds(bounds, { padding: [50, 50] });
+            }
+        }
+
+        let selectedFacilityId = null;
+        let isMapLocked = false;
+
+        function displayFacilities(filteredFacilities = []) {
+            const grid = document.getElementById('facilities-grid');
+
+            if (filteredFacilities.length === 0) {
+                grid.innerHTML = '<p style="color: #666; text-align: center; padding: 2rem;">Utilisez les filtres ci-dessus pour rechercher des installations sportives.</p>';
+                return;
+            }
+
+            const availabilityText = {
+                'available': 'Disponible',
+                'limited': 'Peu de places',
+                'full': 'Complet'
+            };
+
+            const typeText = {
+                'tennis': 'Tennis',
+                'piscine': 'Piscine',
+                'soccer': 'Soccer',
+                'basketball': 'Basketball',
+                'volleyball': 'Volleyball',
+                'baseball': 'Baseball'
+            };
+
+            grid.innerHTML = filteredFacilities.map(facility => `
+                <div class="facility-card"
+                     data-facility-id="${facility.id}"
+                     onmouseenter="hoverFacility(${facility.id})"
+                     onmouseleave="unhoverFacility()"
+                     onclick="handleCardClick(event, ${facility.id})">
+                    <span class="availability-badge ${facility.availability}">${availabilityText[facility.availability]}</span>
+                    <h3>${facility.name}</h3>
+                    <p><strong>Type:</strong> ${typeText[facility.type]}</p>
+                    <p><strong>📍 Adresse:</strong> ${facility.address}</p>
+                    <p><strong>Ville:</strong> ${facility.ville.charAt(0).toUpperCase() + facility.ville.slice(1)}</p>
+                    <div class="reserve-btn-container" id="reserve-btn-${facility.id}" style="display: none;">
+                        <button class="reserve-btn" onclick="handleReserveClick(event, ${facility.id})">
+                            Réserver maintenant
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function handleCardClick(event, facilityId) {
+            event.stopPropagation();
+            selectFacility(facilityId);
+        }
+
+        function handleReserveClick(event, facilityId) {
+            event.stopPropagation();
+            openReservationForm(facilityId);
+        }
+
+        function hoverFacility(id) {
+            if (isMapLocked) return;
+
+            const facility = facilities.find(f => f.id === id);
+            if (facility) {
+                map.flyTo([facility.lat, facility.lng], 15, {
+                    animate: true,
+                    duration: 0.8
+                });
+                const marker = markers.find(m =>
+                    m.getLatLng().lat === facility.lat &&
+                    m.getLatLng().lng === facility.lng
+                );
+                if (marker) {
+                    setTimeout(() => marker.openPopup(), 400);
+                }
+            }
+        }
+
+        function unhoverFacility() {
+            if (isMapLocked) return;
+            // Optionnel: fermer le popup si pas locked
+            map.closePopup();
+        }
+
+        function selectFacility(id) {
+            console.log('selectFacility called with id:', id);
+
+            // Désélectionner l'ancienne carte
+            if (selectedFacilityId && selectedFacilityId !== id) {
+                const oldBtn = document.getElementById(`reserve-btn-${selectedFacilityId}`);
+                if (oldBtn) {
+                    oldBtn.style.display = 'none';
+                }
+
+                const oldCard = document.querySelector(`[data-facility-id="${selectedFacilityId}"]`);
+                if (oldCard) {
+                    oldCard.classList.remove('selected');
+                }
+            }
+
+            // Si on clique sur la même carte, ne rien faire
+            if (selectedFacilityId === id) {
+                return;
+            }
+
+            // Sélectionner la nouvelle carte
+            selectedFacilityId = id;
+            isMapLocked = true;
+
+            const facility = facilities.find(f => f.id === id);
+            if (!facility) {
+                console.error('Facility not found:', id);
+                return;
+            }
+
+            // Zoomer sur la map et locker
+            map.flyTo([facility.lat, facility.lng], 16, {
+                animate: true,
+                duration: 1
+            });
+
+            const marker = markers.find(m =>
+                m.getLatLng().lat === facility.lat &&
+                m.getLatLng().lng === facility.lng
+            );
+            if (marker) {
+                setTimeout(() => marker.openPopup(), 500);
+            }
+
+            // Ajouter classe selected à la carte
+            const card = document.querySelector(`[data-facility-id="${id}"]`);
+            if (card) {
+                card.classList.add('selected');
+            } else {
+                console.error('Card not found for id:', id);
+            }
+
+            // Afficher le bouton réserver
+            const btnContainer = document.getElementById(`reserve-btn-${id}`);
+            if (btnContainer) {
+                btnContainer.style.display = 'block';
+                console.log('Button container shown for id:', id);
+            } else {
+                console.error('Button container not found for id:', id);
+            }
+        }
+
+        function openReservationForm(facilityId) {
+            const facility = facilities.find(f => f.id === facilityId);
+            if (!facility) return;
+
+            // Remplir les informations de l'installation
+            document.getElementById('facility-id').value = facility.id;
+            document.getElementById('facility-name-display').value = facility.name;
+            document.getElementById('form-title').textContent = `Réserver - ${facility.name}`;
+
+            // Réinitialiser le formulaire
+            document.getElementById('dynamic-reservation-form').reset();
+            document.getElementById('facility-id').value = facility.id;
+            document.getElementById('facility-name-display').value = facility.name;
+
+            // Définir la date minimum à aujourd'hui
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('res-date').setAttribute('min', today);
+
+            // Afficher le formulaire
+            sections.forEach(s => s.classList.remove('active'));
+            document.getElementById('reservation-form').classList.add('active');
+        }
+
+        function closeReservationForm() {
+            sections.forEach(s => s.classList.remove('active'));
+            document.getElementById('explorer').classList.add('active');
+        }
+
+        function focusOnFacility(id) {
+            const facility = facilities.find(f => f.id === id);
+            if (facility) {
+                map.setView([facility.lat, facility.lng], 16);
+                markers.find(m => m.getLatLng().lat === facility.lat && m.getLatLng().lng === facility.lng).openPopup();
+            }
+        }
+
+        // Filtres
+        document.getElementById('filter-ville').addEventListener('change', applyFilters);
+        document.getElementById('filter-sport').addEventListener('change', applyFilters);
+
+        function applyFilters() {
+            const villeFilter = document.getElementById('filter-ville').value;
+            const sportFilter = document.getElementById('filter-sport').value;
+
+            // Réinitialiser la sélection
+            selectedFacilityId = null;
+            isMapLocked = false;
+
+            let filtered = facilities;
+
+            // Appliquer les filtres
+            if (villeFilter) {
+                filtered = filtered.filter(f => f.ville === villeFilter);
+            }
+
+            if (sportFilter) {
+                filtered = filtered.filter(f => f.type === sportFilter);
+            }
+
+            // Toujours mettre à jour la carte avec les résultats filtrés
+            updateMap(filtered);
+
+            // N'afficher la grille que si au moins un filtre est sélectionné
+            if (!villeFilter && !sportFilter) {
+                displayFacilities([]);
+            } else {
+                displayFacilities(filtered);
+            }
+        }
+
+        // Système de disponibilité en temps réel simulé
+        function updateAvailability() {
+            facilities.forEach(facility => {
+                const rand = Math.random();
+                if (rand < 0.5) {
+                    facility.availability = 'available';
+                } else if (rand < 0.8) {
+                    facility.availability = 'limited';
+                } else {
+                    facility.availability = 'full';
+                }
+            });
+
+            applyFilters();
+        }
+
+        // Mettre à jour la disponibilité toutes les 30 secondes
+        setInterval(updateAvailability, 30000);
+
+        // Stockage des réservations
+        let reservations = JSON.parse(localStorage.getItem('reservations')) || [];
+
+        // Fonction pour afficher une alerte
+        function showAlert(alertId, message, type) {
+            const alert = document.getElementById(alertId);
+            alert.textContent = message;
+            alert.className = `alert ${type} show`;
+            setTimeout(() => {
+                alert.classList.remove('show');
+            }, 5000);
+        }
+
+        // Fonction pour générer un numéro de confirmation
+        function generateConfirmation() {
+            return 'QC-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+        }
+
+        // Fonction pour afficher les réservations
+        function displayReservations() {
+            const list = document.getElementById('reservations-list');
+            if (reservations.length === 0) {
+                list.innerHTML = '<p style="color: #666;">Aucune réservation pour le moment.</p>';
+                return;
+            }
+
+            list.innerHTML = reservations.map(res => `
+                <div class="reservation-card">
+                    <h3>${res.type}</h3>
+                    <p><strong>Confirmation:</strong> ${res.confirmation}</p>
+                    <p><strong>Nom:</strong> ${res.nom}</p>
+                    <p><strong>Lieu:</strong> ${res.lieu}</p>
+                    <p><strong>Date:</strong> ${res.date}</p>
+                    <p><strong>Heure:</strong> ${res.heure}</p>
+                    <p><strong>Durée:</strong> ${res.duree} heure(s)</p>
+                    ${res.notes ? `<p><strong>Notes:</strong> ${res.notes}</p>` : ''}
+                </div>
+            `).join('');
+        }
+
+        // Formulaire de réservation dynamique
+        document.getElementById('dynamic-reservation-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const facilityId = parseInt(document.getElementById('facility-id').value);
+            const facility = facilities.find(f => f.id === facilityId);
+
+            const typeText = {
+                'tennis': 'Tennis',
+                'piscine': 'Piscine',
+                'soccer': 'Soccer',
+                'basketball': 'Basketball',
+                'volleyball': 'Volleyball',
+                'baseball': 'Baseball'
+            };
+
+            const reservation = {
+                type: typeText[facility.type],
+                confirmation: generateConfirmation(),
+                nom: document.getElementById('res-nom').value,
+                email: document.getElementById('res-email').value,
+                telephone: document.getElementById('res-telephone').value,
+                lieu: facility.name,
+                date: document.getElementById('res-date').value,
+                heure: document.getElementById('res-heure').value,
+                duree: document.getElementById('res-duree').value,
+                notes: document.getElementById('res-notes').value
+            };
+
+            reservations.push(reservation);
+            localStorage.setItem('reservations', JSON.stringify(reservations));
+
+            showAlert('reservation-alert', `Réservation confirmée! Numéro: ${reservation.confirmation}`, 'success');
+
+            // Retourner à l'explorer après 2 secondes
+            setTimeout(() => {
+                closeReservationForm();
+            }, 2000);
+        });
+
+        // Charger les réservations au démarrage
+        displayReservations();
+
+        // Mettre à jour l'affichage des réservations quand on navigue vers cette section
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (link.getAttribute('data-section') === 'mes-reservations') {
+                    displayReservations();
+                }
+            });
+        });
+
+        // Désélectionner quand on clique sur la liste (pas sur une carte)
+        document.addEventListener('DOMContentLoaded', () => {
+            const facilitiesList = document.getElementById('facilities-grid');
+            facilitiesList.addEventListener('click', (e) => {
+                // Si on clique directement sur la liste (pas sur une carte)
+                if (e.target === facilitiesList) {
+                    deselectFacility();
+                }
+            });
+        });
+
+        function deselectFacility() {
+            if (selectedFacilityId) {
+                const oldBtn = document.getElementById(`reserve-btn-${selectedFacilityId}`);
+                if (oldBtn) oldBtn.style.display = 'none';
+
+                const oldCard = document.querySelector(`[data-facility-id="${selectedFacilityId}"]`);
+                if (oldCard) oldCard.classList.remove('selected');
+
+                selectedFacilityId = null;
+                isMapLocked = false;
+                map.closePopup();
+            }
+        }
+
+        // Initialiser la carte au chargement de la page
+        window.addEventListener('load', () => {
+            initMap();
+            displayFacilities([]);
+        });
+
+        // Curseur personnalisé
+        const cursor = document.querySelector('.custom-cursor');
+        let mouseX = 0;
+        let mouseY = 0;
+        let cursorX = 0;
+        let cursorY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function animateCursor() {
+            const diffX = mouseX - cursorX;
+            const diffY = mouseY - cursorY;
+
+            cursorX += diffX * 0.1;
+            cursorY += diffY * 0.1;
+
+            cursor.style.left = cursorX - 20 + 'px';
+            cursor.style.top = cursorY - 20 + 'px';
+
+            requestAnimationFrame(animateCursor);
+        }
+
+        animateCursor();
+
+        document.addEventListener('mousedown', () => {
+            cursor.classList.add('clicked');
+        });
+
+        document.addEventListener('mouseup', () => {
+            cursor.classList.remove('clicked');
+        });
+
+        // Scroll smooth vers explorer
+        function scrollToExplorer(e) {
+            e.preventDefault();
+            const explorerSection = document.getElementById('explorer');
+            explorerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    </script>
+</body>
+</html>
