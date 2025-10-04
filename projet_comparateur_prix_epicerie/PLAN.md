@@ -6,10 +6,10 @@ Application mobile locale permettant de comparer les prix entre IGA, Metro, Maxi
 ## Todo List de Développement
 
 ### Phase 1: Setup Initial (Jour 1)
-- [ ] Initialiser le backend
-  - [ ] `npm init` pour créer projet Node.js
-  - [ ] Installer Express, SQLite3, Puppeteer/Cheerio
-  - [ ] Créer structure de dossiers
+- [x] Initialiser le backend
+  - [x] `npm init` pour créer projet Node.js
+  - [x] Installer Express, SQLite3, Puppeteer/Cheerio
+  - [x] Créer structure de dossiers
 - [ ] Initialiser l'app mobile
   - [ ] `npx create-expo-app mobile`
   - [ ] Configuration pour iOS simulator
