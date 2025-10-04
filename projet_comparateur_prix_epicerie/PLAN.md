@@ -14,9 +14,11 @@ Application mobile locale permettant de comparer les prix entre IGA, Metro, Maxi
   - [ ] `npx create-expo-app mobile`
   - [ ] Configuration pour iOS simulator
   - [ ] Installer dépendances (axios, react-navigation)
-- [ ] Base de données locale
-  - [ ] Créer schéma SQLite
-  - [ ] Tables: products, stores, prices, baskets
+- [x] Base de données locale
+  - [x] Créer schéma SQLite
+  - [x] Tables: products, stores, prices, baskets
+  - [x] Module de connexion et wrappers pour requêtes
+  - [x] Script de test de la base de données
 
 ### Phase 2: Scraping des Prix (Jours 2-4)
 - [ ] Scraper IGA
