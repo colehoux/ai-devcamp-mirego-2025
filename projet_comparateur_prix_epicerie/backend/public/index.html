@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparateur de Prix d'Épicerie</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛒 Comparateur de Prix</h1>
+            <p class="subtitle">Trouvez les meilleurs prix pour vos produits d'épicerie</p>
+        </header>
+
+        <div class="search-section">
+            <div class="search-box">
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Rechercher un produit (ex: lait, pain, pommes...)"
+                    autocomplete="off"
+                />
+                <button id="searchBtn">Rechercher</button>
+            </div>
+        </div>
+
+        <div id="resultsSection" class="results-section hidden">
+            <div class="results-header">
+                <h2>Résultats</h2>
+                <span id="resultsCount" class="results-count"></span>
+            </div>
+            <div id="resultsContainer" class="results-container"></div>
+        </div>
+
+        <div id="emptyState" class="empty-state">
+            <div class="empty-icon">🔍</div>
+            <p>Recherchez un produit pour commencer</p>
+        </div>
+
+        <div id="loadingState" class="loading-state hidden">
+            <div class="spinner"></div>
+            <p>Recherche en cours...</p>
+        </div>
+
+        <div id="noResults" class="no-results hidden">
+            <div class="empty-icon">😔</div>
+            <p>Aucun produit trouvé</p>
+            <small>Essayez avec un autre terme de recherche</small>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
