@@ -10,19 +10,32 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-      issues: write
       id-token: write
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
 
       - name: Run Claude Code Review
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          prompt: "/review"
-          claude_args: "--max-turns 5"
+          track_progress: true
+          prompt: |
+            REPO: ${{ github.repository }}
+            PR NUMBER: ${{ github.event.pull_request.number }}
+
+            Fais un code review complet de cette pull request en te concentrant sur:
+            - Qualité du code et meilleures pratiques
+            - Sécurité et vulnérabilités potentielles
+            - Performance et optimisations
+            - Tests et couverture de code
+            - Documentation
+
+            Utilise des commentaires inline pour pointer des problèmes spécifiques.
+            Utilise des commentaires généraux pour observations globales.
+
+          claude_args: |
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"
