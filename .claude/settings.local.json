@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nRefactor: Organize code and add pool schedule feature\n\n- Separated CSS and JavaScript into external files for better maintainability\n- Moved all project files to sports-reservation-quebec/ directory\n- Added pool schedule modal with weekly hours for all 3 pools\n- Dynamic button text: \"Voir l 'horaire\" for pools, \"Réserver maintenant\" for other sports\n- Improved card scrolling behavior to ensure reserve button visibility\n- Added padding-bottom to facilities list for better UX\n- Enhanced modal with animations (fadeIn, slideUp) and weekend styling\n\nFiles:\n- sports-reservation-quebec/index.html (361 lines)\n- sports-reservation-quebec/styles.css (707 lines)\n- sports-reservation-quebec/script.js (603 lines)\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
