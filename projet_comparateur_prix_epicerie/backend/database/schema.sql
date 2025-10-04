@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS products (
     size TEXT,
     unit TEXT,
     category TEXT,
+    image_url TEXT,
     normalized_name TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
