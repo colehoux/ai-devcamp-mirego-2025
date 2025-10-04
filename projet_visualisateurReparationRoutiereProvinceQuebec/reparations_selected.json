@@ -1,0 +1,131 @@
+[
+  {
+    "id": "206220",
+    "route": "25",
+    "type_travaux": "Projet de réfection du tunnel Louis-Hippolyte-La Fontaine",
+    "localisation": "À Montréal (Mercier-Hochelaga-Maisonneuve)\r\nLa sortie 4 (avenue Souligny, centre-ville)",
+    "direction": "Sud et nord",
+    "entrave": "",
+    "debut": "2022/10/31 00:00:00",
+    "fin": "2025/12/31 00:00:00",
+    "description": "À Montréal (Mercier-Hochelaga-Maisonneuve)\r\nDirection sud\r\nLa sortie 4 (avenue Souligny, centre-ville) \r\nLargeur de voie : 4,5 mètres\r\nTravaux: projet de réfection du tunnel Louis-Hippolyte-La Fontaine",
+    "detours": "",
+    "geometry": {
+      "type": "LineString",
+      "coordinates": [
+        [
+          -73.52996,
+          45.591768
+        ],
+        [
+          -73.529601,
+          45.591671
+        ],
+        [
+          -73.52907,
+          45.5915
+        ]
+      ]
+    },
+    "bbox": [
+      -73.52996,
+      45.5915,
+      -73.52907,
+      45.591768
+    ]
+  },
+  {
+    "id": "306154",
+    "route": "301",
+    "type_travaux": "Travaux d'inspection",
+    "localisation": "À Portage-du-Fort, sur le chemin de l'Île, au-dessus de la rivière des Outaouais",
+    "direction": "Sud et nord",
+    "entrave": "Circulation en alternance, dimanche, entre 8 h et 18 h",
+    "debut": "2025/10/05 08:00:00",
+    "fin": "2025/10/05 18:00:00",
+    "description": "Travaux d'inspection\r\nÀ Portage-du-Fort, sur le chemin de l'Île, au-dessus de la rivière des Outaouais\r\nDans les deux directions\r\nCirculation en alternance, dimanche, entre 8 h et 18 h",
+    "detours": "",
+    "geometry": {
+      "type": "LineString",
+      "coordinates": [
+        [
+          -76.670542,
+          45.586599
+        ],
+        [
+          -76.671451,
+          45.584991
+        ]
+      ]
+    },
+    "bbox": [
+      -76.671451,
+      45.584991,
+      -76.670542,
+      45.586599
+    ]
+  },
+  {
+    "id": "305836",
+    "route": "",
+    "type_travaux": "Hydro-Québec",
+    "localisation": "À Montréal, sur voie de desserte, entre rue Houde et av. Sainte-Croix",
+    "direction": "Ouest",
+    "entrave": "Fermeture de 2 voies sur 4 \r\nDe vendredi 22 h à lundi 5 h",
+    "debut": "2025/10/03 22:00:00",
+    "fin": "2025/10/06 05:00:00",
+    "description": "Hydro-Québec\r\nÀ Montréal, sur voie de desserte, entre rue Houde et av. Sainte-Croix\r\nFermeture de 2 voies sur 4 \r\nDe vendredi 22 h à lundi 5 h",
+    "detours": "",
+    "geometry": {
+      "type": "LineString",
+      "coordinates": [
+        [
+          -73.659205,
+          45.51429
+        ],
+        [
+          -73.659138,
+          45.514271
+        ],
+        [
+          -73.659439,
+          45.513812
+        ],
+        [
+          -73.660339,
+          45.51234
+        ],
+        [
+          -73.661665,
+          45.510306
+        ],
+        [
+          -73.662421,
+          45.509122
+        ],
+        [
+          -73.66268,
+          45.508692
+        ],
+        [
+          -73.66277,
+          45.508573
+        ],
+        [
+          -73.662832,
+          45.508491
+        ],
+        [
+          -73.663105,
+          45.508058
+        ]
+      ]
+    },
+    "bbox": [
+      -73.663105,
+      45.508058,
+      -73.659138,
+      45.51429
+    ]
+  }
+]
