@@ -22,12 +22,20 @@ app.get('/api', (req, res) => {
 app.get('/api/products/search', async (req, res) => {
   try {
     const { q } = req.query;
+    console.log('Search query received:', q);
 
     if (!q || q.trim() === '') {
+      console.log('Empty query, returning empty array');
       return res.json([]);
     }
 
-    const searchTerm = `%${q.trim()}%`;
+    const searchQuery = q.trim().toLowerCase();
+    const searchTerm = `%${searchQuery}%`;
+    const startsWithTerm = `${searchQuery}%`;
+    const startsWithSpace = `${searchQuery} %`;
+    const exactWordTerm = `% ${searchQuery} %`;
+    const endsWithSpace = `% ${searchQuery}`;
+    console.log('Search term:', searchTerm);
 
     const products = await db.all(`
       SELECT
@@ -37,27 +45,38 @@ app.get('/api/products/search', async (req, res) => {
         p.size,
         p.category,
         MIN(pr.price) as min_price,
-        GROUP_CONCAT(
+        json_group_array(
           json_object(
             'store', s.name,
             'price', pr.price,
             'url', pr.url,
             'in_stock', pr.in_stock
           )
-        ) as prices
+        ) as prices,
+        CASE
+          WHEN LOWER(p.name) = ? THEN 0
+          WHEN LOWER(p.brand) = ? THEN 0
+          WHEN LOWER(p.name) LIKE ? OR LOWER(p.brand) LIKE ? THEN 1
+          WHEN LOWER(' ' || p.name || ' ') LIKE ? OR LOWER(' ' || p.brand || ' ') LIKE ? THEN 2
+          WHEN LOWER(' ' || p.name || ' ') LIKE ? OR LOWER(' ' || p.brand || ' ') LIKE ? THEN 2
+          WHEN LOWER(p.name) LIKE ? OR LOWER(p.brand) LIKE ? THEN 3
+          ELSE 4
+        END as priority
       FROM products p
       INNER JOIN prices pr ON p.id = pr.product_id
       INNER JOIN stores s ON pr.store_id = s.id
-      WHERE p.name LIKE ? OR p.brand LIKE ?
+      WHERE LOWER(p.name) LIKE ? OR LOWER(p.brand) LIKE ?
       GROUP BY p.id
-      ORDER BY min_price ASC
+      ORDER BY priority ASC, min_price ASC
       LIMIT 50
-    `, [searchTerm, searchTerm]);
+    `, [searchQuery, searchQuery, startsWithSpace, startsWithSpace, exactWordTerm, exactWordTerm, endsWithSpace, endsWithSpace, startsWithTerm, startsWithTerm, searchTerm, searchTerm]);
+
+    console.log('Products found:', products.length);
 
     // Parse the prices JSON for each product
     const parsedProducts = products.map(product => ({
       ...product,
-      prices: product.prices ? product.prices.split(',').map(p => JSON.parse(p)) : []
+      prices: product.prices ? JSON.parse(product.prices) : []
     }));
 
     res.json(parsedProducts);
@@ -70,8 +89,13 @@ app.get('/api/products/search', async (req, res) => {
 // Initialize database and start server
 db.initDatabase()
   .then(() => {
-    app.listen(PORT, '0.0.0.0', () => {
+    const server = app.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running on http://localhost:${PORT}`);
+    });
+
+    server.on('error', (err) => {
+      console.error('Server error:', err);
+      process.exit(1);
     });
   })
   .catch(err => {

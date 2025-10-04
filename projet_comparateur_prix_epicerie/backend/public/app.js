@@ -3,6 +3,7 @@ const searchInput = document.getElementById('searchInput');
 const searchBtn = document.getElementById('searchBtn');
 const resultsSection = document.getElementById('resultsSection');
 const resultsContainer = document.getElementById('resultsContainer');
+const paginationContainer = document.getElementById('paginationContainer');
 const resultsCount = document.getElementById('resultsCount');
 const emptyState = document.getElementById('emptyState');
 const loadingState = document.getElementById('loadingState');
@@ -13,6 +14,9 @@ const API_URL = window.location.origin;
 
 // State
 let currentQuery = '';
+let allProducts = [];
+let currentPage = 1;
+const ITEMS_PER_PAGE = 10;
 
 // Event Listeners
 searchBtn.addEventListener('click', handleSearch);
@@ -31,6 +35,7 @@ async function handleSearch() {
     }
 
     currentQuery = query;
+    currentPage = 1;
 
     // Show loading state
     showLoading();
@@ -43,8 +48,9 @@ async function handleSearch() {
         }
 
         const products = await response.json();
+        allProducts = products;
 
-        displayResults(products);
+        displayResults();
     } catch (error) {
         console.error('Search error:', error);
         showError();
@@ -52,19 +58,71 @@ async function handleSearch() {
 }
 
 // Display Results
-function displayResults(products) {
+function displayResults() {
     hideAllStates();
 
-    if (products.length === 0) {
+    if (allProducts.length === 0) {
         noResults.classList.remove('hidden');
         return;
     }
 
     resultsSection.classList.remove('hidden');
-    resultsCount.textContent = `${products.length} produit${products.length > 1 ? 's' : ''} trouvé${products.length > 1 ? 's' : ''}`;
 
-    resultsContainer.innerHTML = products.map(product => createProductCard(product)).join('');
+    const totalPages = Math.ceil(allProducts.length / ITEMS_PER_PAGE);
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const productsToShow = allProducts.slice(startIndex, endIndex);
+
+    resultsCount.textContent = `${allProducts.length} produit${allProducts.length > 1 ? 's' : ''} trouvé${allProducts.length > 1 ? 's' : ''} - Page ${currentPage}/${totalPages}`;
+
+    resultsContainer.innerHTML = productsToShow.map(product => createProductCard(product)).join('');
+
+    // Add pagination in separate container
+    if (totalPages > 1) {
+        paginationContainer.innerHTML = createPagination(totalPages);
+    } else {
+        paginationContainer.innerHTML = '';
+    }
 }
+
+// Create Pagination HTML
+function createPagination(totalPages) {
+    let paginationHTML = '<div class="pagination">';
+
+    // Previous button
+    if (currentPage > 1) {
+        paginationHTML += `<button class="pagination-btn" onclick="changePage(${currentPage - 1})">← Précédent</button>`;
+    }
+
+    // Page numbers
+    for (let i = 1; i <= totalPages; i++) {
+        if (i === currentPage) {
+            paginationHTML += `<button class="pagination-btn active">${i}</button>`;
+        } else if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+            paginationHTML += `<button class="pagination-btn" onclick="changePage(${i})">${i}</button>`;
+        } else if (i === currentPage - 2 || i === currentPage + 2) {
+            paginationHTML += `<span class="pagination-ellipsis">...</span>`;
+        }
+    }
+
+    // Next button
+    if (currentPage < totalPages) {
+        paginationHTML += `<button class="pagination-btn" onclick="changePage(${currentPage + 1})">Suivant →</button>`;
+    }
+
+    paginationHTML += '</div>';
+    return paginationHTML;
+}
+
+// Change Page
+function changePage(page) {
+    currentPage = page;
+    displayResults();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Make changePage available globally
+window.changePage = changePage;
 
 // Create Product Card HTML
 function createProductCard(product) {
