@@ -1,0 +1,14 @@
+{
+  "name": "grocery-price-comparator-backend",
+  "version": "1.0.0",
+  "description": "Backend API pour le comparateur de prix d'épicerie",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "scrape": "node src/scrapers/index.js"
+  },
+  "keywords": ["grocery", "price-comparator", "api"],
+  "author": "",
+  "license": "ISC"
+}
