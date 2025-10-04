@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réservation Installations Sportives - Ville de Québec</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="custom-cursor"></div>
+
+    <header>
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>
+                    Réservez vos
+                    <span class="highlight">installations sportives</span>
+                    en un clic
+                </h1>
+                <p>Découvrez et réservez facilement les meilleurs terrains de sport dans la région de Québec. Tennis, piscines, soccer et plus encore.</p>
+            </div>
+            <div class="hero-visual">
+                <div class="sport-icon">🎾</div>
+                <div class="sport-icon">🏊</div>
+                <div class="sport-icon">⚽</div>
+                <div class="sport-icon">🏀</div>
+                <div class="sport-icon">🏐</div>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#" class="nav-link active" data-section="explorer">🗺️ Explorer</a></li>
+            <li><a href="#" class="nav-link" data-section="mes-reservations">📋 Mes Réservations</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <!-- Section Explorer avec Carte -->
+        <section id="explorer" class="section active">
+            <h2>Trouvez votre terrain idéal</h2>
+
+            <div class="filters-container">
+                <div class="filter-group">
+                    <label for="filter-ville">Filtrer par ville</label>
+                    <select id="filter-ville">
+                        <option value="">Toutes les villes</option>
+                        <option value="quebec">Québec</option>
+                        <option value="levis">Lévis</option>
+                        <option value="beauport">Beauport</option>
+                        <option value="sainte-foy">Sainte-Foy</option>
+                        <option value="charlesbourg">Charlesbourg</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filter-sport">Filtrer par sport</label>
+                    <select id="filter-sport">
+                        <option value="">Tous les sports</option>
+                        <option value="tennis">Tennis</option>
+                        <option value="piscine">Piscine</option>
+                        <option value="soccer">Soccer</option>
+                        <option value="basketball">Basketball</option>
+                        <option value="volleyball">Volleyball</option>
+                        <option value="baseball">Baseball</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="map-grid-container">
+                <div id="map"></div>
+                <div class="facilities-list" id="facilities-grid"></div>
+            </div>
+        </section>
+
+        <!-- Section Formulaire de Réservation -->
+        <section id="reservation-form" class="section">
+            <button onclick="closeReservationForm()" style="margin-bottom: 1rem; background: #6b7280;">← Retour</button>
+            <h2 id="form-title">Réserver</h2>
+            <div id="reservation-alert" class="alert"></div>
+            <form id="dynamic-reservation-form">
+                <input type="hidden" id="facility-id">
+                <div class="form-group">
+                    <label for="facility-name-display">Installation *</label>
+                    <input type="text" id="facility-name-display" readonly style="background: #f3f4f6;">
+                </div>
+                <div class="form-group">
+                    <label for="res-nom">Nom complet *</label>
+                    <input type="text" id="res-nom" required>
+                </div>
+                <div class="form-group">
+                    <label for="res-email">Courriel *</label>
+                    <input type="email" id="res-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="res-telephone">Téléphone *</label>
+                    <input type="tel" id="res-telephone" required>
+                </div>
+                <div class="form-group">
+                    <label for="res-date">Date *</label>
+                    <input type="date" id="res-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="res-heure">Heure *</label>
+                    <select id="res-heure" required>
+                        <option value="">Sélectionner une heure</option>
+                        <option value="08:00">08:00</option>
+                        <option value="09:00">09:00</option>
+                        <option value="10:00">10:00</option>
+                        <option value="11:00">11:00</option>
+                        <option value="12:00">12:00</option>
+                        <option value="13:00">13:00</option>
+                        <option value="14:00">14:00</option>
+                        <option value="15:00">15:00</option>
+                        <option value="16:00">16:00</option>
+                        <option value="17:00">17:00</option>
+                        <option value="18:00">18:00</option>
+                        <option value="19:00">19:00</option>
+                        <option value="20:00">20:00</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="res-duree">Durée *</label>
+                    <select id="res-duree" required>
+                        <option value="1">1 heure</option>
+                        <option value="2">2 heures</option>
+                        <option value="3">3 heures</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="res-notes">Notes additionnelles</label>
+                    <textarea id="res-notes" rows="3"></textarea>
+                </div>
+                <button type="submit">Confirmer la réservation</button>
+            </form>
+        </section>
+
+        <!-- Section Tennis (kept but hidden) -->
+        <section id="tennis" class="section" style="display:none;">
+            <h2>Réservation de Terrains de Tennis</h2>
+            <div id="tennis-alert" class="alert"></div>
+            <form id="tennis-form">
+                <div class="form-group">
+                    <label for="tennis-nom">Nom complet *</label>
+                    <input type="text" id="tennis-nom" required>
+                </div>
+                <div class="form-group">
+                    <label for="tennis-email">Courriel *</label>
+                    <input type="email" id="tennis-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="tennis-telephone">Téléphone *</label>
+                    <input type="tel" id="tennis-telephone" required>
+                </div>
+                <div class="form-group">
+                    <label for="tennis-terrain">Terrain *</label>
+                    <select id="tennis-terrain" required>
+                        <option value="">Sélectionner un terrain</option>
+                        <option value="Parc Victoria - Court 1">Parc Victoria - Court 1</option>
+                        <option value="Parc Victoria - Court 2">Parc Victoria - Court 2</option>
+                        <option value="Parc des Braves - Court 1">Parc des Braves - Court 1</option>
+                        <option value="Parc des Braves - Court 2">Parc des Braves - Court 2</option>
+                        <option value="Complexe St-Louis - Court 1">Complexe St-Louis - Court 1</option>
+                        <option value="Complexe St-Louis - Court 2">Complexe St-Louis - Court 2</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="tennis-date">Date *</label>
+                    <input type="date" id="tennis-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="tennis-heure">Heure *</label>
+                    <select id="tennis-heure" required>
+                        <option value="">Sélectionner une heure</option>
+                        <option value="08:00">08:00</option>
+                        <option value="09:00">09:00</option>
+                        <option value="10:00">10:00</option>
+                        <option value="11:00">11:00</option>
+                        <option value="12:00">12:00</option>
+                        <option value="13:00">13:00</option>
+                        <option value="14:00">14:00</option>
+                        <option value="15:00">15:00</option>
+                        <option value="16:00">16:00</option>
+                        <option value="17:00">17:00</option>
+                        <option value="18:00">18:00</option>
+                        <option value="19:00">19:00</option>
+                        <option value="20:00">20:00</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="tennis-duree">Durée *</label>
+                    <select id="tennis-duree" required>
+                        <option value="1">1 heure</option>
+                        <option value="2">2 heures</option>
+                    </select>
+                </div>
+                <button type="submit">Réserver</button>
+            </form>
+        </section>
+
+        <!-- Section Piscines -->
+        <section id="piscine" class="section">
+            <h2>Horaires des Piscines</h2>
+            <div class="schedule-grid">
+                <div class="schedule-card">
+                    <h3>Piscine Montcalm</h3>
+                    <p><strong>📍 Adresse:</strong> 901 avenue Wolfe</p>
+                    <div class="schedule-item">
+                        <strong>Lundi - Vendredi:</strong><br>
+                        Bain libre: 06:00 - 08:00<br>
+                        Cours: 09:00 - 12:00<br>
+                        Bain libre: 12:00 - 14:00<br>
+                        Cours: 14:00 - 17:00<br>
+                        Bain libre: 17:00 - 21:00
+                    </div>
+                    <div class="schedule-item">
+                        <strong>Samedi - Dimanche:</strong><br>
+                        Bain libre: 08:00 - 12:00<br>
+                        Bain famille: 13:00 - 17:00
+                    </div>
+                </div>
+
+                <div class="schedule-card">
+                    <h3>Piscine de Sainte-Foy</h3>
+                    <p><strong>📍 Adresse:</strong> 2320 chemin Sainte-Foy</p>
+                    <div class="schedule-item">
+                        <strong>Lundi - Vendredi:</strong><br>
+                        Bain libre: 06:30 - 08:30<br>
+                        Cours: 09:00 - 12:00<br>
+                        Bain libre: 12:00 - 14:00<br>
+                        Cours: 14:00 - 17:00<br>
+                        Bain libre: 17:00 - 21:00
+                    </div>
+                    <div class="schedule-item">
+                        <strong>Samedi - Dimanche:</strong><br>
+                        Bain libre: 09:00 - 12:00<br>
+                        Bain famille: 13:00 - 18:00
+                    </div>
+                </div>
+
+                <div class="schedule-card">
+                    <h3>Centre Aquatique de Beauport</h3>
+                    <p><strong>📍 Adresse:</strong> 345 rue Clemenceau</p>
+                    <div class="schedule-item">
+                        <strong>Lundi - Vendredi:</strong><br>
+                        Bain libre: 06:00 - 08:00<br>
+                        Cours: 08:30 - 12:00<br>
+                        Bain libre: 12:00 - 15:00<br>
+                        Cours: 15:00 - 17:00<br>
+                        Bain libre: 17:00 - 21:30
+                    </div>
+                    <div class="schedule-item">
+                        <strong>Samedi - Dimanche:</strong><br>
+                        Bain libre: 08:00 - 13:00<br>
+                        Bain famille: 13:00 - 19:00
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Autres Terrains -->
+        <section id="autres" class="section">
+            <h2>Réservation d'Autres Terrains Sportifs</h2>
+            <div id="autres-alert" class="alert"></div>
+            <form id="autres-form">
+                <div class="form-group">
+                    <label for="autres-nom">Nom complet *</label>
+                    <input type="text" id="autres-nom" required>
+                </div>
+                <div class="form-group">
+                    <label for="autres-email">Courriel *</label>
+                    <input type="email" id="autres-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="autres-telephone">Téléphone *</label>
+                    <input type="tel" id="autres-telephone" required>
+                </div>
+                <div class="form-group">
+                    <label for="autres-type">Type de terrain *</label>
+                    <select id="autres-type" required>
+                        <option value="">Sélectionner un type</option>
+                        <option value="soccer">Terrain de Soccer</option>
+                        <option value="basketball">Terrain de Basketball</option>
+                        <option value="volleyball">Terrain de Volleyball</option>
+                        <option value="baseball">Terrain de Baseball</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="autres-terrain">Lieu *</label>
+                    <select id="autres-terrain" required>
+                        <option value="">Sélectionner un lieu</option>
+                        <option value="Parc de la Plage-Jacques-Cartier">Parc de la Plage-Jacques-Cartier</option>
+                        <option value="Parc du Bois-de-Coulonge">Parc du Bois-de-Coulonge</option>
+                        <option value="Complexe Sportif Sainte-Foy">Complexe Sportif Sainte-Foy</option>
+                        <option value="Parc des Champs-de-Bataille">Parc des Champs-de-Bataille</option>
+                        <option value="Centre Sportif Beauport">Centre Sportif Beauport</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="autres-date">Date *</label>
+                    <input type="date" id="autres-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="autres-heure">Heure *</label>
+                    <select id="autres-heure" required>
+                        <option value="">Sélectionner une heure</option>
+                        <option value="08:00">08:00</option>
+                        <option value="09:00">09:00</option>
+                        <option value="10:00">10:00</option>
+                        <option value="11:00">11:00</option>
+                        <option value="12:00">12:00</option>
+                        <option value="13:00">13:00</option>
+                        <option value="14:00">14:00</option>
+                        <option value="15:00">15:00</option>
+                        <option value="16:00">16:00</option>
+                        <option value="17:00">17:00</option>
+                        <option value="18:00">18:00</option>
+                        <option value="19:00">19:00</option>
+                        <option value="20:00">20:00</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="autres-duree">Durée *</label>
+                    <select id="autres-duree" required>
+                        <option value="1">1 heure</option>
+                        <option value="2">2 heures</option>
+                        <option value="3">3 heures</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="autres-notes">Notes additionnelles</label>
+                    <textarea id="autres-notes" rows="3"></textarea>
+                </div>
+                <button type="submit">Réserver</button>
+            </form>
+        </section>
+
+        <!-- Section Mes Réservations -->
+        <section id="mes-reservations" class="section">
+            <h2>Mes Réservations</h2>
+            <div class="reservations-list" id="reservations-list">
+                <p style="color: #666;">Aucune réservation pour le moment.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Ville de Québec - Installations Sportives</p>
+            <p>Pour toute question: 418-XXX-XXXX | info@ville.quebec.qc.ca</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
