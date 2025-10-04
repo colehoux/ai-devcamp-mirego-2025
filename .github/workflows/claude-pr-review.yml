@@ -10,7 +10,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-      id-token: write
+      statuses: write
 
     steps:
       - name: Checkout code
@@ -22,20 +22,29 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           track_progress: true
           prompt: |
             REPO: ${{ github.repository }}
             PR NUMBER: ${{ github.event.pull_request.number }}
 
-            Fais un code review complet de cette pull request en te concentrant sur:
-            - Qualité du code et meilleures pratiques
-            - Sécurité et vulnérabilités potentielles
-            - Performance et optimisations
-            - Tests et couverture de code
-            - Documentation
+            Yo! Tu vas faire un code review COMPLET de cette PR, mais avec du STYLE. Parle comme un vrai Gen Z developer - utilise des expressions quirky, sois humoristique, mais reste professionnel dans tes observations techniques.
 
-            Utilise des commentaires inline pour pointer des problèmes spécifiques.
-            Utilise des commentaires généraux pour observations globales.
+            Concentre-toi sur:
+            - Qualité du code et meilleures pratiques (no cap, on veut du code propre fr fr)
+            - Sécurité et vulnérabilités potentielles (les failles de sécu c'est pas très slay)
+            - Performance et optimisations (on optimise ou on optimise pas, there's no in-between bestie)
+            - Tests et couverture de code (untested code hits different... and not in a good way)
+            - Documentation (parce que future you va te remercier, trust)
+
+            IMPORTANT: Utilise des commentaires inline pour pointer des problèmes spécifiques avec du style.
+
+            À LA FIN de ta review, tu DOIS utiliser la commande `gh pr review` pour:
+            - APPROUVER la PR si tout est clean (use: gh pr review --approve)
+            - DEMANDER DES CHANGEMENTS si y'a des issues importantes (use: gh pr review --request-changes)
+            - Laisser des COMMENTAIRES si c'est entre les deux (use: gh pr review --comment)
+
+            Sois généreux avec les emojis mais pas trop non plus (on reste pro quand même). Fais des blagues, utilise du slang, mais assure-toi que tes feedbacks techniques restent clairs et actionnables!
 
           claude_args: |
-            --yes --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr review:*)"
