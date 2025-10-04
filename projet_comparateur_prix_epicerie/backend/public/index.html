@@ -9,8 +9,16 @@
 <body>
     <div class="container">
         <header>
-            <h1>🛒 Comparateur de Prix</h1>
-            <p class="subtitle">Trouvez les meilleurs prix pour vos produits d'épicerie</p>
+            <div class="header-content">
+                <div>
+                    <h1>🛒 Comparateur de Prix</h1>
+                    <p class="subtitle">Trouvez les meilleurs prix pour vos produits d'épicerie</p>
+                </div>
+                <button class="cart-button" onclick="toggleCart()">
+                    🛒 Panier
+                    <span id="cartBadge" class="cart-badge">0</span>
+                </button>
+            </div>
         </header>
 
         <div class="search-section">
@@ -50,6 +58,33 @@
             <small>Essayez avec un autre terme de recherche</small>
         </div>
     </div>
+
+    <!-- Cart Panel -->
+    <div id="cartPanel" class="cart-panel">
+        <div class="cart-header">
+            <h2>🛒 Mon Panier</h2>
+            <button class="close-cart-btn" onclick="toggleCart()">✕</button>
+        </div>
+
+        <div class="cart-content">
+            <div id="emptyCart" class="empty-cart">
+                <div class="empty-icon">🛒</div>
+                <p>Votre panier est vide</p>
+            </div>
+            <div id="cartItems" class="cart-items"></div>
+        </div>
+
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal" class="total-amount">0,00 $</span>
+            </div>
+            <button class="clear-cart-btn" onclick="clearCart()">Vider le panier</button>
+        </div>
+    </div>
+
+    <!-- Cart Notification -->
+    <div id="cartNotification" class="cart-notification"></div>
 
     <script src="app.js"></script>
 </body>

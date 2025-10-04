@@ -17,6 +17,137 @@ let currentQuery = '';
 let allProducts = [];
 let currentPage = 1;
 const ITEMS_PER_PAGE = 10;
+let cart = [];
+
+// Cart Management
+function loadCart() {
+    const saved = localStorage.getItem('groceryCart');
+    cart = saved ? JSON.parse(saved) : [];
+    updateCartBadge();
+}
+
+function saveCart() {
+    localStorage.setItem('groceryCart', JSON.stringify(cart));
+    updateCartBadge();
+}
+
+function addToCart(product, store, price) {
+    const item = {
+        id: `${product.id}_${store}`,
+        productId: product.id,
+        name: product.name,
+        brand: product.brand,
+        size: product.size,
+        store: store,
+        price: price,
+        quantity: 1
+    };
+
+    const existingIndex = cart.findIndex(i => i.id === item.id);
+    if (existingIndex >= 0) {
+        cart[existingIndex].quantity++;
+    } else {
+        cart.push(item);
+    }
+
+    saveCart();
+    showCartNotification(`${product.name} ajouté au panier`);
+}
+
+function removeFromCart(itemId) {
+    cart = cart.filter(item => item.id !== itemId);
+    saveCart();
+    renderCart();
+}
+
+function updateQuantity(itemId, quantity) {
+    const item = cart.find(i => i.id === itemId);
+    if (item) {
+        if (quantity <= 0) {
+            removeFromCart(itemId);
+        } else {
+            item.quantity = quantity;
+            saveCart();
+            renderCart();
+        }
+    }
+}
+
+function clearCart() {
+    cart = [];
+    saveCart();
+    renderCart();
+}
+
+function getCartTotal() {
+    return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+}
+
+function updateCartBadge() {
+    const badge = document.getElementById('cartBadge');
+    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+    badge.textContent = count;
+    badge.style.display = count > 0 ? 'block' : 'none';
+}
+
+function toggleCart() {
+    const cartPanel = document.getElementById('cartPanel');
+    cartPanel.classList.toggle('open');
+    if (cartPanel.classList.contains('open')) {
+        renderCart();
+    }
+}
+
+function renderCart() {
+    const cartItems = document.getElementById('cartItems');
+    const cartTotal = document.getElementById('cartTotal');
+    const emptyCart = document.getElementById('emptyCart');
+
+    if (cart.length === 0) {
+        cartItems.innerHTML = '';
+        emptyCart.style.display = 'block';
+        cartTotal.textContent = formatPrice(0);
+        return;
+    }
+
+    emptyCart.style.display = 'none';
+    cartItems.innerHTML = cart.map(item => `
+        <div class="cart-item">
+            <div class="cart-item-info">
+                <div class="cart-item-name">${escapeHtml(item.name)}</div>
+                <div class="cart-item-details">
+                    ${item.brand ? escapeHtml(item.brand) + ' • ' : ''}${escapeHtml(item.store)}
+                    ${item.size ? ' • ' + escapeHtml(item.size) : ''}
+                </div>
+                <div class="cart-item-price">${formatPrice(item.price)}</div>
+            </div>
+            <div class="cart-item-actions">
+                <button class="quantity-btn" onclick="updateQuantity('${item.id}', ${item.quantity - 1})">-</button>
+                <span class="quantity">${item.quantity}</span>
+                <button class="quantity-btn" onclick="updateQuantity('${item.id}', ${item.quantity + 1})">+</button>
+                <button class="remove-btn" onclick="removeFromCart('${item.id}')">🗑️</button>
+            </div>
+        </div>
+    `).join('');
+
+    cartTotal.textContent = formatPrice(getCartTotal());
+}
+
+function showCartNotification(message) {
+    const notification = document.getElementById('cartNotification');
+    notification.textContent = message;
+    notification.classList.add('show');
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 2000);
+}
+
+// Make cart functions globally accessible
+window.addToCart = addToCart;
+window.removeFromCart = removeFromCart;
+window.updateQuantity = updateQuantity;
+window.toggleCart = toggleCart;
+window.clearCart = clearCart;
 
 // Event Listeners
 searchBtn.addEventListener('click', handleSearch);
@@ -147,7 +278,7 @@ function createProductCard(product) {
             <div class="store-prices">
                 <div class="store-prices-title">Prix dans tous les magasins:</div>
                 <div class="store-list">
-                    ${sortedPrices.map(priceInfo => createStoreItem(priceInfo)).join('')}
+                    ${sortedPrices.map(priceInfo => createStoreItem(priceInfo, product)).join('')}
                 </div>
             </div>
         </div>
@@ -155,7 +286,7 @@ function createProductCard(product) {
 }
 
 // Create Store Item HTML
-function createStoreItem(priceInfo) {
+function createStoreItem(priceInfo, product) {
     const isInStock = priceInfo.in_stock;
     const stockClass = isInStock ? '' : 'out-of-stock';
 
@@ -168,8 +299,9 @@ function createStoreItem(priceInfo) {
                     : '<span class="stock-badge out-of-stock-badge">Rupture</span>'
                 }
             </div>
-            <div>
+            <div class="store-item-actions">
                 <span class="store-price">${formatPrice(priceInfo.price)}</span>
+                ${isInStock ? `<button class="add-to-cart-btn" onclick='addToCart(${JSON.stringify(product)}, "${escapeHtml(priceInfo.store)}", ${priceInfo.price})'>🛒 Ajouter</button>` : ''}
                 ${priceInfo.url ? `<a href="${escapeHtml(priceInfo.url)}" target="_blank" rel="noopener noreferrer" class="store-link">Voir →</a>` : ''}
             </div>
         </div>
@@ -207,5 +339,6 @@ function hideAllStates() {
     resultsSection.classList.add('hidden');
 }
 
-// Focus on search input on load
+// Initialize on load
+loadCart();
 searchInput.focus();
