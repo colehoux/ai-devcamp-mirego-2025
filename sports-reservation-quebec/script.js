@@ -1,76 +1,197 @@
 // Base de données des installations sportives
 const facilities = [
-    { id: 1, name: 'Parc Victoria - Court 1', type: 'tennis', ville: 'quebec', lat: 46.8139, lng: -71.2080, address: '155 rue Crémazie Est', availability: 'available' },
-    { id: 2, name: 'Parc Victoria - Court 2', type: 'tennis', ville: 'quebec', lat: 46.8139, lng: -71.2078, address: '155 rue Crémazie Est', availability: 'limited' },
-    { id: 3, name: 'Parc des Braves - Court 1', type: 'tennis', ville: 'quebec', lat: 46.7889, lng: -71.2404, address: '2365 avenue des Braves', availability: 'available' },
-    { id: 4, name: 'Parc des Braves - Court 2', type: 'tennis', ville: 'quebec', lat: 46.7889, lng: -71.2402, address: '2365 avenue des Braves', availability: 'full' },
-    { id: 5, name: 'Complexe St-Louis - Court 1', type: 'tennis', ville: 'sainte-foy', lat: 46.7767, lng: -71.2893, address: '1200 rue de l\'Église', availability: 'available' },
-    { id: 6, name: 'Complexe St-Louis - Court 2', type: 'tennis', ville: 'sainte-foy', lat: 46.7767, lng: -71.2891, address: '1200 rue de l\'Église', availability: 'limited' },
-
+    // PISCINES INTÉRIEURES
     {
-        id: 7,
-        name: 'Piscine Montcalm',
+        id: 1,
+        name: 'Arpidrome',
         type: 'piscine',
-        ville: 'quebec',
-        lat: 46.8025,
-        lng: -71.2244,
-        address: '901 avenue Wolfe',
+        ville: 'charlesbourg',
+        lat: 46.8584,
+        lng: -71.2698,
+        address: '750 rue de la Sorbonne, Charlesbourg',
         availability: 'available',
         horaires: {
-            lundi: '6h00 - 21h00',
-            mardi: '6h00 - 21h00',
-            mercredi: '6h00 - 21h00',
-            jeudi: '6h00 - 21h00',
-            vendredi: '6h00 - 21h00',
-            samedi: '8h00 - 18h00',
-            dimanche: '8h00 - 18h00'
+            lundi: '19h45 - 21h45',
+            mardi: '07h00 - 08h30, 11h30 - 13h00',
+            mercredi: '07h00 - 08h30, 11h30 - 13h00, 20h00 - 21h30',
+            jeudi: '07h00 - 08h30',
+            vendredi: '11h30 - 13h00, 19h45 - 21h45',
+            samedi: '14h30 - 17h00',
+            dimanche: '07h00 - 08h30'
+        }
+    },
+    {
+        id: 2,
+        name: 'Centre communautaire Ferland',
+        type: 'piscine',
+        ville: 'quebec',
+        lat: 46.8252,
+        lng: -71.2428,
+        address: '1600, 8e Avenue, La Cité-Limoilou',
+        availability: 'available',
+        horaires: {
+            lundi: '12h00 - 13h20, 19h00 - 20h25',
+            mardi: '12h00 - 13h20, 19h00 - 20h25',
+            mercredi: '12h00 - 13h20, 14h30 - 15h55, 19h00 - 20h20, 20h30 - 21h55',
+            jeudi: '15h00 - 16h25',
+            vendredi: '12h00 - 13h20, 19h00 - 20h20, 20h30 - 21h55',
+            samedi: '14h00 - 15h30, 19h00 - 20h25',
+            dimanche: '14h00 - 15h30'
+        }
+    },
+    {
+        id: 3,
+        name: 'Centre communautaire Lucien-Borne',
+        type: 'piscine',
+        ville: 'quebec',
+        lat: 46.8020,
+        lng: -71.2295,
+        address: '100 chemin Sainte-Foy, La Cité-Limoilou',
+        availability: 'available',
+        horaires: {
+            lundi: '07h00 - 08h30, 11h45 - 13h30, 18h30 - 20h00',
+            mardi: '07h00 - 08h30, 11h45 - 13h30, 18h30 - 20h00',
+            mercredi: '07h00 - 08h30, 11h45 - 13h30, 18h30 - 20h00',
+            jeudi: '07h00 - 08h30, 11h45 - 13h30, 18h30 - 20h00',
+            vendredi: '07h00 - 08h30, 11h45 - 13h30',
+            samedi: '14h00 - 15h45, 19h00 - 20h45',
+            dimanche: '14h00 - 15h45, 19h00 - 20h45'
+        }
+    },
+    {
+        id: 4,
+        name: 'Centre communautaire Michel-Labadie',
+        type: 'piscine',
+        ville: 'les-rivieres',
+        lat: 46.8745,
+        lng: -71.3189,
+        address: '3705 avenue Chauveau, Les Rivières',
+        availability: 'available',
+        horaires: {
+            lundi: '11h45 - 13h15, 19h00 - 20h25',
+            mardi: '10h00 - 11h45, 12h00 - 13h15, 19h00 - 20h25',
+            mercredi: 'Fermé',
+            jeudi: '11h45 - 13h15, 19h00 - 20h25',
+            vendredi: '11h50 - 13h15, 19h00 - 20h40',
+            samedi: '14h00 - 15h25',
+            dimanche: '14h00 - 15h25'
+        }
+    },
+    {
+        id: 5,
+        name: 'Centre municipal Monseigneur-De Laval',
+        type: 'piscine',
+        ville: 'beauport',
+        lat: 46.8647,
+        lng: -71.1928,
+        address: '2 rue du Fargy, Beauport',
+        availability: 'available',
+        horaires: {
+            lundi: '12h00 - 13h25, 13h45 - 15h15, 17h30 - 19h00',
+            mardi: '12h00 - 13h25, 13h45 - 15h15',
+            mercredi: '12h00 - 13h25, 13h45 - 15h15, 17h30 - 19h15, 19h30 - 20h30',
+            jeudi: '12h00 - 13h25, 13h45 - 15h15, 17h30 - 19h15',
+            vendredi: '12h00 - 13h25, 17h30 - 19h15, 19h30 - 20h30',
+            samedi: 'Fermé',
+            dimanche: 'Fermé'
+        }
+    },
+    {
+        id: 6,
+        name: "Piscine de l'école L'Odyssée",
+        type: 'piscine',
+        ville: 'la-haute-saint-charles',
+        lat: 46.9088,
+        lng: -71.3683,
+        address: "1485 rue de l'Innovation, La Haute-Saint-Charles",
+        availability: 'available',
+        horaires: {
+            lundi: '11h35 - 12h40, 19h45 - 21h15',
+            mardi: '20h15 - 21h45',
+            mercredi: '06h30 - 08h00, 11h35 - 12h40, 20h15 - 21h45',
+            jeudi: '20h15 - 21h45',
+            vendredi: '11h35 - 12h40, 19h30 - 21h00',
+            samedi: '14h00 - 16h00, 19h00 - 20h30',
+            dimanche: '14h00 - 16h00, 19h00 - 20h30'
+        }
+    },
+    {
+        id: 7,
+        name: "Piscine de l'édifice Denis-Giguère",
+        type: 'piscine',
+        ville: 'la-haute-saint-charles',
+        lat: 46.8956,
+        lng: -71.3892,
+        address: '305 rue Racine, La Haute-Saint-Charles',
+        availability: 'available',
+        horaires: {
+            lundi: '12h00 - 13h25, 13h30 - 14h25, 14h30 - 15h25',
+            mardi: '06h30 - 08h30, 12h00 - 13h30, 18h00 - 19h55',
+            mercredi: '12h05 - 13h30, 15h00 - 16h30',
+            jeudi: '06h30 - 08h30, 12h00 - 13h30, 18h00 - 19h55, 20h00 - 21h00',
+            vendredi: '12h00 - 13h25, 13h30 - 14h25, 14h30 - 15h25, 19h00 - 20h30',
+            samedi: '13h30 - 14h55, 15h00 - 16h00',
+            dimanche: '13h30 - 14h55, 15h00 - 16h00'
         }
     },
     {
         id: 8,
-        name: 'Piscine de Sainte-Foy',
+        name: 'Piscine Sylvie-Bernier',
         type: 'piscine',
         ville: 'sainte-foy',
-        lat: 46.7714,
-        lng: -71.2920,
-        address: '2320 chemin Sainte-Foy',
-        availability: 'limited',
-        horaires: {
-            lundi: '6h30 - 20h30',
-            mardi: '6h30 - 20h30',
-            mercredi: '6h30 - 20h30',
-            jeudi: '6h30 - 20h30',
-            vendredi: '6h30 - 20h30',
-            samedi: '9h00 - 17h00',
-            dimanche: '9h00 - 17h00'
-        }
-    },
-    {
-        id: 9,
-        name: 'Centre Aquatique de Beauport',
-        type: 'piscine',
-        ville: 'beauport',
-        lat: 46.8601,
-        lng: -71.1861,
-        address: '345 rue Clemenceau',
+        lat: 46.7743,
+        lng: -71.2889,
+        address: '3020 boulevard Hochelaga, Sainte-Foy–Sillery–Cap-Rouge',
         availability: 'available',
         horaires: {
-            lundi: '5h30 - 22h00',
-            mardi: '5h30 - 22h00',
-            mercredi: '5h30 - 22h00',
-            jeudi: '5h30 - 22h00',
-            vendredi: '5h30 - 22h00',
-            samedi: '7h00 - 19h00',
-            dimanche: '7h00 - 19h00'
+            lundi: '06h30 - 08h30, 12h05 - 13h05, 18h15 - 19h10, 19h15 - 20h10',
+            mardi: '06h30 - 08h30, 12h05 - 13h05, 17h00 - 18h20, 21h00 - 22h30',
+            mercredi: '06h30 - 08h30, 12h05 - 13h05, 18h30 - 19h55',
+            jeudi: '06h30 - 08h30, 12h05 - 13h05',
+            vendredi: '06h30 - 08h30, 12h05 - 13h05, 20h45 - 22h15',
+            samedi: '13h30 - 16h00',
+            dimanche: '13h30 - 15h55, 18h30 - 19h55, 20h00 - 21h30'
         }
     },
 
-    { id: 10, name: 'Parc de la Plage-Jacques-Cartier - Soccer', type: 'soccer', ville: 'quebec', lat: 46.8324, lng: -71.2574, address: '235 rue Abraham-Martin', availability: 'available' },
-    { id: 11, name: 'Parc du Bois-de-Coulonge - Soccer', type: 'soccer', ville: 'quebec', lat: 46.7894, lng: -71.2516, address: '1215 chemin Saint-Louis', availability: 'limited' },
-    { id: 12, name: 'Complexe Sportif Sainte-Foy - Basketball', type: 'basketball', ville: 'sainte-foy', lat: 46.7725, lng: -71.2944, address: '930 avenue Myrand', availability: 'available' },
-    { id: 13, name: 'Parc des Champs-de-Bataille - Volleyball', type: 'volleyball', ville: 'quebec', lat: 46.7970, lng: -71.2177, address: '835 avenue Wilfrid-Laurier', availability: 'available' },
-    { id: 14, name: 'Centre Sportif Beauport - Baseball', type: 'baseball', ville: 'beauport', lat: 46.8677, lng: -71.1784, address: '500 rue Seigneuriale', availability: 'full' },
-    { id: 15, name: 'Parc Chauveau - Soccer', type: 'soccer', ville: 'charlesbourg', lat: 46.8834, lng: -71.2688, address: '7650 boulevard Cloutier', availability: 'available' },
+    // TERRAINS DE TENNIS
+    { id: 9, name: 'Parc Victoria - Tennis', type: 'tennis', ville: 'quebec', lat: 46.8024, lng: -71.2178, address: '160 rue du Cardinal-Maurice-Roy, La Cité-Limoilou', availability: 'available' },
+    { id: 10, name: 'Chalet de tennis Courville', type: 'tennis', ville: 'beauport', lat: 46.8822, lng: -71.1725, address: '2271 avenue Larue, Beauport', availability: 'available' },
+    { id: 11, name: 'Parc Saint-Ignace - Tennis', type: 'tennis', ville: 'beauport', lat: 46.8901, lng: -71.1547, address: '3300 chemin Royal, Beauport', availability: 'available' },
+    { id: 12, name: 'Arpitennis', type: 'tennis', ville: 'charlesbourg', lat: 46.8590, lng: -71.2693, address: '570, 79e Rue Est, Charlesbourg', availability: 'available' },
+    { id: 13, name: 'Parc Maria-Goretti - Tennis', type: 'tennis', ville: 'charlesbourg', lat: 46.8517, lng: -71.2836, address: '7475 avenue Paul-Comtois, Charlesbourg', availability: 'available' },
+    { id: 14, name: 'Parc de La Chanterelle - Tennis', type: 'tennis', ville: 'la-haute-saint-charles', lat: 46.9089, lng: -71.3686, address: "1525 rue de l'Innovation, La Haute-Saint-Charles", availability: 'available' },
+    { id: 15, name: 'Parc des Sources - Tennis', type: 'tennis', ville: 'sainte-foy', lat: 46.7851, lng: -71.2667, address: '1140 rue du Capitaine-Bernier, Sainte-Foy', availability: 'available' },
+    { id: 16, name: 'Parc Provancher - Tennis', type: 'tennis', ville: 'sainte-foy', lat: 46.7651, lng: -71.3051, address: '4170 rue Michel-Hervé, Sainte-Foy', availability: 'available' },
+    { id: 17, name: 'Parc des Trois-Saisons - Tennis', type: 'tennis', ville: 'sainte-foy', lat: 46.7692, lng: -71.2851, address: '1469 rue Buffon, Sainte-Foy', availability: 'available' },
+    { id: 18, name: 'Parc Raymond-De Rosa - Tennis', type: 'tennis', ville: 'sainte-foy', lat: 46.7713, lng: -71.2981, address: '3224 rue Armand-Hamelin, Sainte-Foy', availability: 'available' },
+    { id: 19, name: 'Parc Bardy - Tennis', type: 'tennis', ville: 'quebec', lat: 46.8150, lng: -71.2316, address: '2025 rue Adjutor-Rivard, La Cité-Limoilou', availability: 'available' },
+    { id: 20, name: 'Parc Saint-Mathieu - Tennis', type: 'tennis', ville: 'sainte-foy', lat: 46.7825, lng: -71.2731, address: '1000 rue de Bar-le-Duc, Sainte-Foy', availability: 'available' },
+
+    // TERRAINS DE SOCCER
+    { id: 21, name: 'Complexe de soccer Chauveau', type: 'soccer', ville: 'les-rivieres', lat: 46.8964, lng: -71.3255, address: "7200 boulevard de l'Ormière, Les Rivières", availability: 'available' },
+    { id: 22, name: 'Parc Victoria - Soccer', type: 'soccer', ville: 'quebec', lat: 46.8024, lng: -71.2178, address: '160 rue du Cardinal-Maurice-Roy, La Cité-Limoilou', availability: 'available' },
+    { id: 23, name: 'Parc de la Ribambelle - Soccer', type: 'soccer', ville: 'beauport', lat: 46.8851, lng: -71.1892, address: '333 rue Perroteau, Beauport', availability: 'available' },
+    { id: 24, name: 'Parc du Périgord - Soccer', type: 'soccer', ville: 'charlesbourg', lat: 46.8278, lng: -71.2896, address: '12050 boulevard Henri-Bourassa, Charlesbourg', availability: 'available' },
+    { id: 25, name: 'Terrain de soccer Francheville', type: 'soccer', ville: 'beauport', lat: 46.8752, lng: -71.1588, address: '3928 boulevard Sainte-Anne, Beauport', availability: 'available' },
+    { id: 26, name: 'Terrain de soccer du C.F.P.-Limoilou', type: 'soccer', ville: 'quebec', lat: 46.8253, lng: -71.2433, address: '2050, 8e Avenue, La Cité-Limoilou', availability: 'available' },
+
+    // TERRAINS DE BASKETBALL
+    { id: 27, name: 'Parc Bardy - Basketball', type: 'basketball', ville: 'quebec', lat: 46.8150, lng: -71.2316, address: '2025 rue Adjutor-Rivard, La Cité-Limoilou', availability: 'available' },
+    { id: 28, name: 'Parc Bon-Pasteur - Basketball', type: 'basketball', ville: 'quebec', lat: 46.8119, lng: -71.2242, address: '395 rue du Bienheureux-Jean-XXIII, La Cité-Limoilou', availability: 'available' },
+    { id: 29, name: 'École secondaire De Rochebelle - Basketball', type: 'basketball', ville: 'sainte-foy', lat: 46.7739, lng: -71.2820, address: '1095 avenue De Rochebelle, Sainte-Foy', availability: 'available' },
+    { id: 30, name: 'Parc Saint-Charles-Garnier - Basketball', type: 'basketball', ville: 'sainte-foy', lat: 46.7691, lng: -71.2899, address: '1700 rue Sheppard, Sainte-Foy', availability: 'available' },
+
+    // TERRAINS DE BASEBALL
+    { id: 31, name: 'Parc Antoine-Masson - Baseball', type: 'baseball', ville: 'les-rivieres', lat: 46.8388, lng: -71.3018, address: "2650 avenue D'Alembert, Les Rivières", availability: 'available' },
+    { id: 32, name: 'Parc Bardy - Baseball', type: 'baseball', ville: 'quebec', lat: 46.8150, lng: -71.2316, address: '2025 rue Adjutor-Rivard, La Cité-Limoilou', availability: 'available' },
+    { id: 33, name: 'Parc Saint-Yves - Baseball', type: 'baseball', ville: 'sainte-foy', lat: 46.7582, lng: -71.3164, address: '2530 rue Anthony-Law, Sainte-Foy', availability: 'available' },
+    { id: 34, name: 'Parc Maria-Goretti - Baseball', type: 'baseball', ville: 'charlesbourg', lat: 46.8517, lng: -71.2836, address: '7475 avenue Paul-Comtois, Charlesbourg', availability: 'available' },
+
+    // VOLLEYBALL DE PLAGE
+    { id: 35, name: 'Parc Noël-Langlois - Volleyball', type: 'volleyball', ville: 'beauport', lat: 46.8812, lng: -71.1692, address: '99 rue de la Terrasse-Orléans, Beauport', availability: 'available' },
+    { id: 36, name: 'Parc Saint-Jérôme - Volleyball', type: 'volleyball', ville: 'charlesbourg', lat: 46.8604, lng: -71.2744, address: '585, 64e Rue Est, Charlesbourg', availability: 'available' },
+    { id: 37, name: 'Base de plein air de Sainte-Foy - Volleyball', type: 'volleyball', ville: 'sainte-foy', lat: 46.7597, lng: -71.3222, address: '3137 rue Laberge, Sainte-Foy', availability: 'available' },
 ];
 
 // Gestion de la navigation
@@ -355,6 +476,7 @@ function showPoolSchedule(facilityId) {
     // Créer le contenu HTML de l'horaire
     const scheduleHTML = `
         <div class="pool-schedule">
+            <button class="modal-close-btn" onclick="closePoolSchedule()">&times;</button>
             <h2>${facility.name}</h2>
             <p class="pool-address"><strong>📍</strong> ${facility.address}</p>
             <div class="schedule-grid">
@@ -387,7 +509,6 @@ function showPoolSchedule(facilityId) {
                     <div class="time-value">${facility.horaires.dimanche}</div>
                 </div>
             </div>
-            <button class="reserve-btn" onclick="closePoolSchedule()" style="margin-top: 2rem;">Retour</button>
         </div>
     `;
 
@@ -504,7 +625,7 @@ function displayReservations() {
         return;
     }
 
-    list.innerHTML = reservations.map(res => `
+    list.innerHTML = reservations.map((res, index) => `
         <div class="reservation-card">
             <h3>${res.type}</h3>
             <p><strong>Confirmation:</strong> ${res.confirmation}</p>
@@ -514,13 +635,37 @@ function displayReservations() {
             <p><strong>Heure:</strong> ${res.heure}</p>
             <p><strong>Durée:</strong> ${res.duree} heure(s)</p>
             ${res.notes ? `<p><strong>Notes:</strong> ${res.notes}</p>` : ''}
+            <button class="cancel-btn" onclick="cancelReservation(${index})">Annuler la réservation</button>
         </div>
     `).join('');
+}
+
+// Fonction pour annuler une réservation
+function cancelReservation(index) {
+    if (confirm('Êtes-vous sûr de vouloir annuler cette réservation?')) {
+        reservations.splice(index, 1);
+        localStorage.setItem('reservations', JSON.stringify(reservations));
+        displayReservations();
+    }
 }
 
 // Formulaire de réservation dynamique
 document.getElementById('dynamic-reservation-form').addEventListener('submit', (e) => {
     e.preventDefault();
+
+    // Trouver le bouton de soumission
+    const submitButton = e.target.querySelector('button[type="submit"]');
+
+    // Empêcher les clics multiples
+    if (submitButton.disabled) {
+        return;
+    }
+
+    // Désactiver le bouton immédiatement
+    submitButton.disabled = true;
+    submitButton.textContent = 'Réservation en cours...';
+    submitButton.style.opacity = '0.6';
+    submitButton.style.cursor = 'not-allowed';
 
     const facilityId = parseInt(document.getElementById('facility-id').value);
     const facility = facilities.find(f => f.id === facilityId);
@@ -550,12 +695,19 @@ document.getElementById('dynamic-reservation-form').addEventListener('submit', (
     reservations.push(reservation);
     localStorage.setItem('reservations', JSON.stringify(reservations));
 
-    showAlert('reservation-alert', `Réservation confirmée! Numéro: ${reservation.confirmation}`, 'success');
+    // Scroller en haut du formulaire pour voir le message
+    document.getElementById('reservation-form').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-    // Retourner à l'explorer après 2 secondes
-    setTimeout(() => {
-        closeReservationForm();
-    }, 2000);
+    showAlert('reservation-alert', `Réservation confirmée avec succès! Numéro de confirmation: ${reservation.confirmation}. Consultez vos réservations dans l'onglet "Mes Réservations".`, 'success');
+
+    // Réinitialiser le formulaire
+    e.target.reset();
+
+    // Réactiver le bouton immédiatement après l'affichage du message
+    submitButton.disabled = false;
+    submitButton.textContent = 'Confirmer la réservation';
+    submitButton.style.opacity = '1';
+    submitButton.style.cursor = 'none';
 });
 
 // Charger les réservations au démarrage
@@ -601,40 +753,6 @@ window.addEventListener('load', () => {
     displayFacilities([]);
 });
 
-// Curseur personnalisé
-const cursor = document.querySelector('.custom-cursor');
-let mouseX = 0;
-let mouseY = 0;
-let cursorX = 0;
-let cursorY = 0;
-
-document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-});
-
-function animateCursor() {
-    const diffX = mouseX - cursorX;
-    const diffY = mouseY - cursorY;
-
-    cursorX += diffX * 0.1;
-    cursorY += diffY * 0.1;
-
-    cursor.style.left = cursorX - 20 + 'px';
-    cursor.style.top = cursorY - 20 + 'px';
-
-    requestAnimationFrame(animateCursor);
-}
-
-animateCursor();
-
-document.addEventListener('mousedown', () => {
-    cursor.classList.add('clicked');
-});
-
-document.addEventListener('mouseup', () => {
-    cursor.classList.remove('clicked');
-});
 
 // Scroll smooth vers explorer
 function scrollToExplorer(e) {
