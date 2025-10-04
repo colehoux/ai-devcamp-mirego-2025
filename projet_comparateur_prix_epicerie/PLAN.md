@@ -10,10 +10,10 @@ Application mobile locale permettant de comparer les prix entre IGA, Metro, Maxi
   - [x] `npm init` pour créer projet Node.js
   - [x] Installer Express, SQLite3, Puppeteer/Cheerio
   - [x] Créer structure de dossiers
-- [ ] Initialiser l'app mobile
-  - [ ] `npx create-expo-app mobile`
-  - [ ] Configuration pour iOS simulator
-  - [ ] Installer dépendances (axios, react-navigation)
+- [x] Initialiser l'app mobile
+  - [x] `npx create-expo-app mobile`
+  - [x] Configuration pour iOS simulator
+  - [x] Installer dépendances (axios, react-navigation)
 - [x] Base de données locale
   - [x] Créer schéma SQLite
   - [x] Tables: products, stores, prices, baskets
