@@ -1,0 +1,82 @@
+﻿"Titre du cube";"Numéro d'identification du produit";"Numéro d'identification de CANSIM";URL;"Notes sur le cube";"État de l'archivage";Fréquence;"Début de la période de référence";"Fin de la période de référence";"Nombre total de dimensions"
+"Commerce international de marchandises pour tous les pays et les principaux partenaires commerciaux, trimestriel";"12100127";;"https://www150.statcan.gc.ca/t1/tbl1/fr/tv.action?pid=1210012701";1,2,3,5,6;"ACTIF - un cube qui est disponible au public et qui est toujours mise a jour";"Trimestrielle";"1997-01-01";"2025-04-01";"5";
+
+"Numéro d'identification de la dimension";"Nom de la dimension";"Notes sur la dimension";"Définitions de la dimension"
+"1";"Géographie";;""
+"2";"Commerce";;""
+"3";"Base";;""
+"4";"Désaisonnalisation";;""
+"5";"Principaux partenaires commerciaux";;""
+
+"Numéro d'identification de la dimension";"Nom du membre";"Code sur la classification";"Numéro d'identification du membre";"Numéro d'identification du membre parent";Terminé;"Notes sur le membre";"Définitions du membre"
+"1";"Canada";"[11124]";"1";"";"";;
+"2";"Importations";"";"1";"";"";;
+"2";"Exportations";"";"2";"";"";;
+"2";"Balance commerciale";"";"3";"";"";;
+"3";"Douanière";"";"1";"";"";;
+"3";"Balance des paiements";"";"2";"";"";;
+"4";"Non désaisonnalisées";"";"1";"";"";;
+"4";"Désaisonnalisées";"";"2";"";"";;
+"5";"États-Unis";"";"2";"1";"";;
+"5";"Union européenne";"";"3";"1";"";4;
+"5";"Royaume-Uni";"";"4";"1";"";;
+"5";"Chine";"";"11";"1";"";;
+"5";"Mexique";"";"12";"1";"";;
+"5";"Japon";"";"13";"1";"";;
+"5";"Corée du Sud";"";"14";"1";"";;
+"5";"Hong-Kong";"";"15";"1";"";;
+"5";"Brésil";"";"16";"1";"";;
+"5";"Algérie";"";"17";"1";"";;
+"5";"Norvège";"";"18";"1";"";;
+"5";"Inde";"";"19";"1";"";;
+"5";"Suisse";"";"20";"1";"";;
+"5";"Arabie Saoudite";"";"21";"1";"";;
+"5";"Türkiye";"";"22";"1";"";;
+"5";"Taïwan";"";"23";"1";"";;
+"5";"Pérou";"";"24";"1";"";;
+"5";"Australie";"";"25";"1";"";;
+"5";"Iraq";"";"26";"1";"";;
+"5";"Indonésie";"";"27";"1";"";;
+"5";"Singapour";"";"28";"1";"";;
+"5";"Fédération de Russie";"";"29";"1";"";;
+"5";"Allemagne";"";"5";"3";"";;
+"5";"Pays-Bas";"";"6";"3";"";;
+"5";"France";"";"7";"3";"";;
+"5";"Italie";"";"8";"3";"";;
+"5";"Belgique";"";"9";"3";"";;
+"5";"Espagne";"";"10";"3";"";;
+"5";"Tous les pays";"";"1";"";"";;
+
+Légende Symbole
+Description;Symbole
+"indisponible pour une période de référence précise";"..";
+"inférieur à la limite de détection";"<LDD";
+"valeur arrondie à 0 (zéro) là où il y a une distinction importante entre le zéro absolu et la valeur arrondie";"0s";
+"qualité des données : excellente";"A";
+"qualité des données : très bonne";"B";
+"qualité des données : bonne";"C";
+"qualité des données : acceptable";"D";
+"à utiliser avec prudence";"E";
+"trop peu fiable pour être publié";"F";
+"n'ayant pas lieu de figurer";"...";
+"provisoire";"p";
+"révisé";"r";
+"confidentiel en vertu des dispositions de la Loi sur la statistique";"x";
+"terminé";"t";
+
+"Code d'enquête";"Nom de l'enquête"
+"2201";"Commerce international de marchandises du Canada (base douanière)"
+"2202";"Commerce international de marchandises du Canada (base de la balance de paiements)"
+
+"Code du sujet";"Nom du sujet"
+"12";"Commerce international"
+
+"Numéro d'identification de la note";Note
+1;"Les totaux ne sont pas égaux à la somme de leurs composantes."
+2;"Les pays inscrits représentent les 27 principaux partenaires commerciaux du Canada selon le total du commerce annuel de marchandises de 2012."
+3;"Le concept de la balance commerciale n'existe que sur la base de la balance des paiements désaisonnalisée."
+4;"Les données pour l'Union européenne incluent le Royaume-Uni jusqu'au mois de référence de décembre 2020. À partir de janvier 2021, le Royaume-Uni a cessé d'être couvert par les accords commerciaux négociés par l'Union européenne et n'est donc pas inclus dans les totaux du commerce international pour l'Union européenne à compter du mois de référence janvier 2021."
+5;"Le 7 décembre 2023, avec la mise en œuvre du Système de classification des produits de l'Amérique du Nord (SCPAN) 2022, des ajustements historiques ont été apportés à toutes les années de référence antérieure à 2016 dans les données fondées sur la balance des paiements afin d'introduire des estimations du commerce illicite de cannabis."
+6;"La principale source de données de Statistique Canada utilisée dans la compilation des statistiques sur les importations fait l'objet d'une transition majeure en raison de l’<a href="https://www.cbsa-asfc.gc.ca/services/carm-gcra/menu-fra.html" rel="external noopener noreferrer" target="_blank">initiative numérique de Gestion des cotisations et des recettes (GCRA) de l’Agence des services frontaliers du Canada (ASFC) (ouvre une nouvelle fenêtre)</a>. La réception des données sur les importations par Statistique Canada accuse présentement des retards, et des problèmes ayant une incidence sur la qualité des données sont également prévus pendant cette période de transition. À compter du quatrième trimestre de 2024, les utilisateurs de ces statistiques doivent faire preuve de prudence et s'attendre à des révisions importantes jusqu'à ce que la situation se stabilise."
+
+"Numéro d'identification de la correction";"Date de la correction";"Note sur la correction"
